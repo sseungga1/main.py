@@ -1,20 +1,30 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
+
 st.set_page_config(
     page_title="Minion Badminton",
-    page_icon="🍌",
+    page_icon="🏸",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# Streamlit 기본 UI 제거
+
+# ---------------------------------------------------------
+# Streamlit 기본 여백 제거
+# ---------------------------------------------------------
+
 st.markdown("""
 <style>
-html, body, [data-testid="stAppViewContainer"] {
+html, body {
     margin: 0 !important;
     padding: 0 !important;
     overflow: hidden !important;
+}
+
+[data-testid="stAppViewContainer"] {
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 [data-testid="stHeader"] {
@@ -45,961 +55,366 @@ iframe {
 """, unsafe_allow_html=True)
 
 
+# ---------------------------------------------------------
+# 3D 배드민턴 체육관
+# ---------------------------------------------------------
+
 html = r"""
 <!DOCTYPE html>
+
 <html>
+
 <head>
+
 <meta charset="UTF-8">
 
 <style>
 
 * {
     box-sizing: border-box;
-    user-select: none;
 }
 
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
+
     width: 100%;
     height: 100%;
+
     overflow: hidden;
-    background: #222;
-    font-family: Arial, sans-serif;
+
+    background: #202020;
 }
 
 #game {
-    position: relative;
+    position: fixed;
+
+    left: 0;
+    top: 0;
+
     width: 100vw;
     height: 100vh;
+
     overflow: hidden;
-    perspective: 900px;
-    background: #e8e5dc;
+
+    background: #202020;
+
     cursor: crosshair;
 }
 
-
-/* =====================================================
-   카메라가 바라보는 전체 세계
-   ===================================================== */
-
-#world {
-    position: absolute;
-
-    width: 1600px;
-    height: 900px;
-
-    left: 50%;
-    top: 50%;
-
-    transform-style: preserve-3d;
-
-    transform:
-        translate(-50%, -50%)
-        translate3d(0px, 0px, 0px)
-        rotateX(0deg)
-        rotateY(0deg);
-
-    transition: transform 0.03s linear;
-}
-
-
-/* =====================================================
-   체육관 벽
-   ===================================================== */
-
-.wall {
-    position: absolute;
-
-    left: 0;
-    top: 0;
-
-    width: 1600px;
-    height: 580px;
-
-    background:
-        linear-gradient(
-            to bottom,
-            #ebe8df 0%,
-            #e5e2d8 78%,
-            #d2cec3 78%,
-            #d2cec3 100%
-        );
-}
-
-
-/* 벽 패널 */
-.wall-panel {
-    position: absolute;
-
-    left: 0;
-    top: 500px;
-
-    width: 1600px;
-    height: 80px;
-
-    background: #d0ccc1;
-
-    border-top: 5px solid #b8b3a8;
-    border-bottom: 5px solid #aaa69c;
-}
-
-
-/* =====================================================
-   창문
-   ===================================================== */
-
-.window {
-    position: absolute;
-
-    top: 80px;
-
-    width: 300px;
-    height: 230px;
-
-    background: #b8d4df;
-
-    border: 9px solid #777b7c;
-
-    box-shadow:
-        inset 0 0 30px rgba(255,255,255,0.5);
-}
-
-.window.left {
-    left: 80px;
-}
-
-.window.right {
-    right: 80px;
-}
-
-.window .v {
-    position: absolute;
-
-    left: 50%;
-    top: 0;
-
-    width: 8px;
-    height: 100%;
-
-    background: #777b7c;
-}
-
-.window .h {
-    position: absolute;
-
-    left: 0;
-    top: 50%;
+canvas {
+    display: block;
 
     width: 100%;
-    height: 8px;
-
-    background: #777b7c;
+    height: 100%;
 }
-
-
-/* =====================================================
-   천장 조명
-   ===================================================== */
-
-.light {
-    position: absolute;
-
-    top: 45px;
-
-    width: 250px;
-    height: 28px;
-
-    background: #fffbdc;
-
-    border-radius: 20px;
-
-    box-shadow:
-        0 15px 35px rgba(255,245,170,0.35);
-}
-
-.light.one {
-    left: 500px;
-}
-
-.light.two {
-    right: 500px;
-}
-
-
-/* =====================================================
-   체육관 바닥
-   ===================================================== */
-
-.floor {
-    position: absolute;
-
-    left: 0;
-    top: 580px;
-
-    width: 1600px;
-    height: 320px;
-
-    background-color: #c78b4c;
-
-    background-image:
-        repeating-linear-gradient(
-            to bottom,
-            rgba(100,60,25,0.15) 0px,
-            rgba(100,60,25,0.15) 3px,
-            transparent 3px,
-            transparent 52px
-        ),
-        repeating-linear-gradient(
-            to right,
-            transparent 0px,
-            transparent 220px,
-            rgba(100,60,25,0.12) 220px,
-            rgba(100,60,25,0.12) 223px
-        );
-}
-
-
-/* =====================================================
-   코트 라인
-   ===================================================== */
-
-.court-line {
-    position: absolute;
-
-    height: 7px;
-
-    background: white;
-
-    left: 80px;
-    width: 1440px;
-}
-
-.court-line.one {
-    top: 620px;
-}
-
-.court-line.two {
-    top: 850px;
-}
-
-
-/* =====================================================
-   네트
-   ===================================================== */
-
-.net {
-    position: absolute;
-
-    left: 800px;
-    top: 365px;
-
-    width: 6px;
-    height: 490px;
-
-    background: #555;
-
-    z-index: 30;
-}
-
-.net-top {
-    position: absolute;
-
-    left: 790px;
-    top: 355px;
-
-    width: 26px;
-    height: 10px;
-
-    background: white;
-
-    z-index: 31;
-}
-
-.net-base {
-    position: absolute;
-
-    left: 760px;
-    top: 850px;
-
-    width: 80px;
-    height: 16px;
-
-    background: #444;
-
-    border-radius: 10px;
-
-    z-index: 30;
-}
-
-
-/* =====================================================
-   Jerry 플레이어
-   ===================================================== */
-
-.jerry {
-    position: absolute;
-
-    left: 520px;
-    top: 500px;
-
-    width: 220px;
-    height: 350px;
-
-    z-index: 50;
-
-    transform-origin: bottom center;
-
-    filter: drop-shadow(
-        0 10px 8px rgba(0,0,0,0.25)
-    );
-}
-
-
-/* Jerry 몸 */
-.jerry-body {
-    position: absolute;
-
-    left: 35px;
-    bottom: 0;
-
-    width: 150px;
-    height: 220px;
-
-    background: #f0d72d;
-
-    border-radius:
-        75px 75px
-        45px 45px;
-
-    border: 5px solid #333;
-}
-
-
-/* Jerry 얼굴 */
-.jerry-head {
-    position: absolute;
-
-    left: 10px;
-    top: 0;
-
-    width: 200px;
-    height: 180px;
-
-    background: #f1d82e;
-
-    border-radius: 50%;
-
-    border: 5px solid #333;
-
-    z-index: 5;
-}
-
-
-/* 고글 */
-.goggle {
-    position: absolute;
-
-    left: 35px;
-    top: 43px;
-
-    width: 130px;
-    height: 65px;
-
-    border-radius: 40px;
-
-    background: #777;
-
-    border: 7px solid #333;
-
-    z-index: 10;
-}
-
-.goggle-glass {
-    position: absolute;
-
-    left: 8px;
-    top: 8px;
-
-    width: 100px;
-    height: 43px;
-
-    border-radius: 30px;
-
-    background: #dbeaf0;
-
-    border: 4px solid #222;
-}
-
-
-/* 눈 */
-.eye {
-    position: absolute;
-
-    left: 48px;
-    top: 48px;
-
-    width: 40px;
-    height: 40px;
-
-    background: white;
-
-    border-radius: 50%;
-
-    z-index: 20;
-}
-
-.pupil {
-    position: absolute;
-
-    left: 13px;
-    top: 10px;
-
-    width: 17px;
-    height: 20px;
-
-    background: #222;
-
-    border-radius: 50%;
-}
-
-
-/* 입 */
-.jerry-mouth {
-    position: absolute;
-
-    left: 70px;
-    top: 120px;
-
-    width: 65px;
-    height: 28px;
-
-    border-bottom: 6px solid #333;
-
-    border-radius: 50%;
-
-    z-index: 20;
-}
-
-
-/* 멜빵 */
-.jerry-overall {
-    position: absolute;
-
-    left: 38px;
-    bottom: 0;
-
-    width: 145px;
-    height: 110px;
-
-    background: #315da8;
-
-    border-radius:
-        20px 20px
-        35px 35px;
-
-    border: 5px solid #333;
-
-    z-index: 8;
-}
-
-
-/* 다리 */
-.leg {
-    position: absolute;
-
-    bottom: -45px;
-
-    width: 48px;
-    height: 65px;
-
-    background: #f0d72d;
-
-    border: 5px solid #333;
-
-    border-radius: 20px;
-}
-
-.leg.left {
-    left: 45px;
-}
-
-.leg.right {
-    right: 45px;
-}
-
-
-/* 신발 */
-.shoe {
-    position: absolute;
-
-    bottom: -52px;
-
-    width: 75px;
-    height: 38px;
-
-    background: #333;
-
-    border-radius: 40px;
-}
-
-.shoe.left {
-    left: 18px;
-}
-
-.shoe.right {
-    right: 18px;
-}
-
-
-/* =====================================================
-   Gru
-   ===================================================== */
-
-.gru {
-    position: absolute;
-
-    left: 1050px;
-    top: 430px;
-
-    width: 190px;
-    height: 420px;
-
-    z-index: 40;
-
-    filter: drop-shadow(
-        0 10px 8px rgba(0,0,0,0.25)
-    );
-}
-
-
-/* Gru 머리 */
-.gru-head {
-    position: absolute;
-
-    left: 35px;
-    top: 0;
-
-    width: 125px;
-    height: 150px;
-
-    background: #e5d0b5;
-
-    border-radius:
-        55% 55%
-        45% 45%;
-
-    border: 5px solid #333;
-}
-
-
-/* Gru 코 */
-.gru-nose {
-    position: absolute;
-
-    left: -18px;
-    top: 70px;
-
-    width: 55px;
-    height: 38px;
-
-    background: #e5d0b5;
-
-    border: 5px solid #333;
-
-    border-radius: 60% 30% 30% 60%;
-}
-
-
-/* Gru 눈 */
-.gru-eye {
-    position: absolute;
-
-    top: 55px;
-
-    width: 18px;
-    height: 18px;
-
-    background: #222;
-
-    border-radius: 50%;
-}
-
-.gru-eye.left {
-    left: 42px;
-}
-
-.gru-eye.right {
-    left: 78px;
-}
-
-
-/* Gru 몸 */
-.gru-body {
-    position: absolute;
-
-    left: 15px;
-    top: 130px;
-
-    width: 160px;
-    height: 270px;
-
-    background: #333;
-
-    border-radius:
-        35px 35px
-        15px 15px;
-
-    border: 5px solid #222;
-}
-
-
-/* Gru 스카프 */
-.scarf {
-    position: absolute;
-
-    left: 22px;
-    top: 145px;
-
-    width: 145px;
-    height: 25px;
-
-    background: #444;
-
-    border: 3px solid #222;
-
-    z-index: 10;
-}
-
-
-/* Gru 다리 */
-.gru-leg {
-    position: absolute;
-
-    bottom: 0;
-
-    width: 55px;
-    height: 80px;
-
-    background: #222;
-
-    border-radius: 20px;
-}
-
-.gru-leg.left {
-    left: 25px;
-}
-
-.gru-leg.right {
-    right: 25px;
-}
-
-
-/* =====================================================
-   화면 안내
-   ===================================================== */
 
 #message {
     position: fixed;
 
     left: 50%;
-    top: 8%;
+    top: 7%;
 
     transform: translateX(-50%);
 
-    padding: 12px 24px;
+    padding: 13px 25px;
 
-    background: rgba(0,0,0,0.65);
+    background: rgba(0, 0, 0, 0.65);
 
     color: white;
 
     border-radius: 30px;
 
-    font-size: 17px;
+    font-family: Arial, sans-serif;
 
-    z-index: 1000;
+    font-size: 16px;
+
+    z-index: 20;
 
     pointer-events: none;
 
     transition: opacity 0.5s;
 }
 
-
-/* 조준점 */
 #crosshair {
     position: fixed;
 
     left: 50%;
     top: 50%;
 
-    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 18px;
 
-    width: 14px;
-    height: 14px;
-
-    z-index: 1000;
+    transform:
+        translate(-50%, -50%);
 
     pointer-events: none;
+
+    z-index: 10;
 }
 
-#crosshair::before,
+#crosshair::before {
+    content: "";
+
+    position: absolute;
+
+    left: 8px;
+    top: 0;
+
+    width: 2px;
+    height: 18px;
+
+    background: rgba(255,255,255,0.8);
+}
+
 #crosshair::after {
     content: "";
 
     position: absolute;
 
+    left: 0;
+    top: 8px;
+
+    width: 18px;
+    height: 2px;
+
     background: rgba(255,255,255,0.8);
 }
 
-#crosshair::before {
-    left: 6px;
-    top: 0;
-
-    width: 2px;
-    height: 14px;
-}
-
-#crosshair::after {
-    left: 0;
-    top: 6px;
-
-    width: 14px;
-    height: 2px;
-}
-
-
-/* 클릭 안내 */
-#click-screen {
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 900;
-
-    cursor: crosshair;
-}
-
 </style>
+
 </head>
 
 
 <body>
 
+
 <div id="game">
 
-    <div id="world">
-
-        <!-- 체육관 -->
-        <div class="wall"></div>
-
-        <div class="wall-panel"></div>
-
-        <!-- 창문 -->
-        <div class="window left">
-            <div class="v"></div>
-            <div class="h"></div>
-        </div>
-
-        <div class="window right">
-            <div class="v"></div>
-            <div class="h"></div>
-        </div>
-
-        <!-- 조명 -->
-        <div class="light one"></div>
-        <div class="light two"></div>
-
-        <!-- 바닥 -->
-        <div class="floor"></div>
-
-        <!-- 코트 라인 -->
-        <div class="court-line one"></div>
-        <div class="court-line two"></div>
-
-
-        <!-- ===============================
-             네트
-             =============================== -->
-
-        <div class="net"></div>
-        <div class="net-top"></div>
-        <div class="net-base"></div>
-
-
-        <!-- ===============================
-             Jerry
-             =============================== -->
-
-        <div class="jerry">
-
-            <div class="jerry-head">
-
-                <div class="goggle">
-                    <div class="goggle-glass"></div>
-                </div>
-
-                <div class="eye">
-                    <div class="pupil"></div>
-                </div>
-
-                <div class="jerry-mouth"></div>
-
-            </div>
-
-            <div class="jerry-body"></div>
-
-            <div class="jerry-overall"></div>
-
-            <div class="leg left"></div>
-            <div class="leg right"></div>
-
-            <div class="shoe left"></div>
-            <div class="shoe right"></div>
-
-        </div>
-
-
-        <!-- ===============================
-             Gru
-             =============================== -->
-
-        <div class="gru">
-
-            <div class="gru-head">
-
-                <div class="gru-nose"></div>
-
-                <div class="gru-eye left"></div>
-                <div class="gru-eye right"></div>
-
-            </div>
-
-            <div class="gru-body"></div>
-
-            <div class="scarf"></div>
-
-            <div class="gru-leg left"></div>
-            <div class="gru-leg right"></div>
-
-        </div>
-
-    </div>
+    <canvas id="canvas"></canvas>
 
 </div>
 
 
-<!-- 안내 -->
 <div id="message">
     화면을 클릭한 뒤 마우스를 움직여 보세요
 </div>
 
-<!-- 조준점 -->
-<div id="crosshair"></div>
 
-<div id="click-screen"></div>
+<div id="crosshair"></div>
 
 
 <script>
 
-const game = document.getElementById("game");
-const world = document.getElementById("world");
-const clickScreen = document.getElementById("click-screen");
-const message = document.getElementById("message");
+
+// =====================================================
+// Canvas
+// =====================================================
+
+const canvas =
+    document.getElementById("canvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+const message =
+    document.getElementById("message");
 
 
 // =====================================================
-// 카메라 변수
+// 화면 크기
 // =====================================================
 
-let cameraX = 0;
-let cameraY = 0;
+let width = 0;
+let height = 0;
 
-let targetX = 0;
-let targetY = 0;
+let centerX = 0;
+let centerY = 0;
 
 
+function resize() {
+
+    const dpr =
+        window.devicePixelRatio || 1;
+
+    width =
+        window.innerWidth;
+
+    height =
+        window.innerHeight;
+
+    canvas.width =
+        width * dpr;
+
+    canvas.height =
+        height * dpr;
+
+    canvas.style.width =
+        width + "px";
+
+    canvas.style.height =
+        height + "px";
+
+    ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+    centerX =
+        width / 2;
+
+    centerY =
+        height / 2;
+}
+
+
+window.addEventListener(
+    "resize",
+    resize
+);
+
+resize();
+
+
+// =====================================================
+// 플레이어 카메라
+//
+// x = 좌우
+// y = 위아래
+// z = 앞뒤
+// =====================================================
+
+const camera = {
+
+    x: 0,
+
+    y: 1.7,
+
+    z: 1.2,
+
+    yaw: 0,
+
+    pitch: 0
+
+};
+
+
+// =====================================================
+// 카메라 목표값
+// =====================================================
+
+let targetYaw = 0;
+
+let targetPitch = 0;
+
+
+// =====================================================
 // 마우스 감도
-const sensitivity = 0.08;
+// =====================================================
 
-
-// 움직일 수 있는 범위
-const maxX = 120;
-const maxY = 75;
+const mouseSensitivity = 0.0025;
 
 
 // =====================================================
-// 클릭하면 마우스 포인터 고정
+// 시야각
 // =====================================================
 
-clickScreen.addEventListener("click", function() {
+const FOV = 75;
 
-    clickScreen.requestPointerLock();
 
-});
+// =====================================================
+// 체육관 크기
+// =====================================================
+
+const COURT_WIDTH = 18;
+
+const COURT_LENGTH = 32;
+
+const WALL_HEIGHT = 8;
+
+
+// =====================================================
+// 네트 위치
+// =====================================================
+
+const NET_Z = 17;
+
+
+// =====================================================
+// Pointer Lock
+// =====================================================
+
+document
+    .getElementById("game")
+    .addEventListener(
+        "click",
+        function() {
+
+            this.requestPointerLock();
+
+        }
+    );
 
 
 // =====================================================
 // 마우스 움직임
 // =====================================================
 
-document.addEventListener("mousemove", function(event) {
+document.addEventListener(
+    "mousemove",
+    function(event) {
 
-    if (document.pointerLockElement !== clickScreen) {
-        return;
+        if (
+            document.pointerLockElement
+            !== document.getElementById("game")
+        ) {
+
+            return;
+
+        }
+
+
+        // 좌우 시선
+
+        targetYaw +=
+            event.movementX
+            * mouseSensitivity;
+
+
+        // 위아래 시선
+
+        targetPitch -=
+            event.movementY
+            * mouseSensitivity;
+
+
+        // 위아래 제한
+        //
+        // 너무 뒤집히지 않도록 제한
+
+        const limit =
+            Math.PI * 0.48;
+
+        targetPitch =
+            Math.max(
+                -limit,
+                Math.min(
+                    limit,
+                    targetPitch
+                )
+            );
+
     }
-
-
-    targetX += event.movementX * sensitivity;
-    targetY += event.movementY * sensitivity;
-
-
-    // 좌우 제한
-    targetX = Math.max(
-        -maxX,
-        Math.min(maxX, targetX)
-    );
-
-
-    // 위아래 제한
-    targetY += event.movementY * sensitivity;
-
-    targetY = Math.max(
-        -maxY,
-        Math.min(maxY, targetY)
-    );
-
-});
+);
 
 
 // =====================================================
-// 부드러운 카메라
-// =====================================================
-
-function updateCamera() {
-
-    cameraX += (targetX - cameraX) * 0.12;
-    cameraY += (targetY - cameraY) * 0.12;
-
-
-    world.style.transform =
-        `
-        translate(-50%, -50%)
-        translate3d(
-            ${-cameraX}px,
-            ${-cameraY}px,
-            0px
-        )
-        `;
-
-
-    requestAnimationFrame(updateCamera);
-}
-
-updateCamera();
-
-
-// =====================================================
-// 마우스 고정 상태 변화
+// Pointer Lock 상태
 // =====================================================
 
 document.addEventListener(
@@ -1007,7 +422,8 @@ document.addEventListener(
     function() {
 
         if (
-            document.pointerLockElement === clickScreen
+            document.pointerLockElement
+            === document.getElementById("game")
         ) {
 
             message.style.opacity = "0";
@@ -1021,9 +437,923 @@ document.addEventListener(
     }
 );
 
+
+// =====================================================
+// 3D → 2D 투영
+// =====================================================
+
+function project(point) {
+
+    let x =
+        point.x - camera.x;
+
+    let y =
+        point.y - camera.y;
+
+    let z =
+        point.z - camera.z;
+
+
+    // -------------------------------
+    // Yaw
+    // 좌우 회전
+    // -------------------------------
+
+    const cosY =
+        Math.cos(-camera.yaw);
+
+    const sinY =
+        Math.sin(-camera.yaw);
+
+
+    const x1 =
+        x * cosY -
+        z * sinY;
+
+    const z1 =
+        x * sinY +
+        z * cosY;
+
+
+    // -------------------------------
+    // Pitch
+    // 위아래 회전
+    // -------------------------------
+
+    const cosP =
+        Math.cos(-camera.pitch);
+
+    const sinP =
+        Math.sin(-camera.pitch);
+
+
+    const y2 =
+        y * cosP -
+        z1 * sinP;
+
+    const z2 =
+        y * sinP +
+        z1 * cosP;
+
+
+    // 카메라 뒤에 있으면 표시하지 않음
+
+    if (z2 <= 0.05) {
+
+        return null;
+
+    }
+
+
+    const focal =
+        (width / 2) /
+        Math.tan(
+            (FOV * Math.PI / 180) / 2
+        );
+
+
+    const screenX =
+        centerX +
+        (x1 / z2) * focal;
+
+
+    const screenY =
+        centerY -
+        (y2 / z2) * focal;
+
+
+    return {
+
+        x: screenX,
+
+        y: screenY,
+
+        depth: z2
+
+    };
+
+}
+
+
+// =====================================================
+// 3D 사각형 그리기
+// =====================================================
+
+function drawQuad(
+    points,
+    fill,
+    stroke = null,
+    lineWidth = 1
+) {
+
+    const projected =
+        points.map(project);
+
+
+    if (
+        projected.some(
+            p => p === null
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        projected[0].x,
+        projected[0].y
+    );
+
+
+    for (
+        let i = 1;
+        i < projected.length;
+        i++
+    ) {
+
+        ctx.lineTo(
+            projected[i].x,
+            projected[i].y
+        );
+
+    }
+
+
+    ctx.closePath();
+
+
+    if (fill) {
+
+        ctx.fillStyle =
+            fill;
+
+        ctx.fill();
+
+    }
+
+
+    if (stroke) {
+
+        ctx.strokeStyle =
+            stroke;
+
+        ctx.lineWidth =
+            lineWidth;
+
+        ctx.stroke();
+
+    }
+
+}
+
+
+// =====================================================
+// 3D 선
+// =====================================================
+
+function drawLine(
+    a,
+    b,
+    color,
+    widthLine = 2
+) {
+
+    const p1 =
+        project(a);
+
+    const p2 =
+        project(b);
+
+
+    if (!p1 || !p2) {
+
+        return;
+
+    }
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        p1.x,
+        p1.y
+    );
+
+    ctx.lineTo(
+        p2.x,
+        p2.y
+    );
+
+    ctx.strokeStyle =
+        color;
+
+    ctx.lineWidth =
+        widthLine;
+
+    ctx.stroke();
+
+}
+
+
+// =====================================================
+// 체육관 배경
+// =====================================================
+
+function drawGym() {
+
+    // ------------------------------------------
+    // 먼 벽
+    // ------------------------------------------
+
+    drawQuad(
+
+        [
+            {
+                x: -COURT_WIDTH / 2,
+                y: 0,
+                z: COURT_LENGTH
+            },
+
+            {
+                x: COURT_WIDTH / 2,
+                y: 0,
+                z: COURT_LENGTH
+            },
+
+            {
+                x: COURT_WIDTH / 2,
+                y: WALL_HEIGHT,
+                z: COURT_LENGTH
+            },
+
+            {
+                x: -COURT_WIDTH / 2,
+                y: WALL_HEIGHT,
+                z: COURT_LENGTH
+            }
+        ],
+
+        "#e7e4da"
+
+    );
+
+
+    // ------------------------------------------
+    // 왼쪽 벽
+    // ------------------------------------------
+
+    drawQuad(
+
+        [
+            {
+                x: -COURT_WIDTH / 2,
+                y: 0,
+                z: 0
+            },
+
+            {
+                x: -COURT_WIDTH / 2,
+                y: 0,
+                z: COURT_LENGTH
+            },
+
+            {
+                x: -COURT_WIDTH / 2,
+                y: WALL_HEIGHT,
+                z: COURT_LENGTH
+            },
+
+            {
+                x: -COURT_WIDTH / 2,
+                y: WALL_HEIGHT,
+                z: 0
+            }
+        ],
+
+        "#ddd9cf"
+
+    );
+
+
+    // ------------------------------------------
+    // 오른쪽 벽
+    // ------------------------------------------
+
+    drawQuad(
+
+        [
+            {
+                x: COURT_WIDTH / 2,
+                y: 0,
+                z: COURT_LENGTH
+            },
+
+            {
+                x: COURT_WIDTH / 2,
+                y: 0,
+                z: 0
+            },
+
+            {
+                x: COURT_WIDTH / 2,
+                y: WALL_HEIGHT,
+                z: 0
+            },
+
+            {
+                x: COURT_WIDTH / 2,
+                y: WALL_HEIGHT,
+                z: COURT_LENGTH
+            }
+        ],
+
+        "#d8d4c9"
+
+    );
+
+
+    // ------------------------------------------
+    // 천장
+    // ------------------------------------------
+
+    drawQuad(
+
+        [
+            {
+                x: -COURT_WIDTH / 2,
+                y: WALL_HEIGHT,
+                z: 0
+            },
+
+            {
+                x: COURT_WIDTH / 2,
+                y: WALL_HEIGHT,
+                z: 0
+            },
+
+            {
+                x: COURT_WIDTH / 2,
+                y: WALL_HEIGHT,
+                z: COURT_LENGTH
+            },
+
+            {
+                x: -COURT_WIDTH / 2,
+                y: WALL_HEIGHT,
+                z: COURT_LENGTH
+            }
+        ],
+
+        "#d8d5cc"
+
+    );
+
+
+    // ------------------------------------------
+    // 바닥
+    // ------------------------------------------
+
+    drawQuad(
+
+        [
+            {
+                x: -COURT_WIDTH / 2,
+                y: 0,
+                z: 0
+            },
+
+            {
+                x: COURT_WIDTH / 2,
+                y: 0,
+                z: 0
+            },
+
+            {
+                x: COURT_WIDTH / 2,
+                y: 0,
+                z: COURT_LENGTH
+            },
+
+            {
+                x: -COURT_WIDTH / 2,
+                y: 0,
+                z: COURT_LENGTH
+            }
+        ],
+
+        "#bd8045"
+
+    );
+
+}
+
+
+// =====================================================
+// 바닥 나무판 줄
+// =====================================================
+
+function drawFloorBoards() {
+
+    for (
+        let z = 2;
+        z < COURT_LENGTH;
+        z += 2
+    ) {
+
+        drawLine(
+
+            {
+                x: -COURT_WIDTH / 2,
+                y: 0.015,
+                z: z
+            },
+
+            {
+                x: COURT_WIDTH / 2,
+                y: 0.015,
+                z: z
+            },
+
+            "rgba(90,50,20,0.28)",
+
+            1
+
+        );
+
+    }
+
+
+    for (
+        let x = -COURT_WIDTH / 2;
+        x <= COURT_WIDTH / 2;
+        x += 2
+    ) {
+
+        drawLine(
+
+            {
+                x: x,
+                y: 0.018,
+                z: 0
+            },
+
+            {
+                x: x,
+                y: 0.018,
+                z: COURT_LENGTH
+            },
+
+            "rgba(90,50,20,0.18)",
+
+            1
+
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// 배드민턴 코트 라인
+// =====================================================
+
+function drawCourtLines() {
+
+    const white =
+        "rgba(255,255,255,0.95)";
+
+
+    // 양쪽 사이드라인
+
+    drawLine(
+
+        {
+            x: -6,
+            y: 0.025,
+            z: 0
+        },
+
+        {
+            x: -6,
+            y: 0.025,
+            z: COURT_LENGTH
+        },
+
+        white,
+
+        3
+
+    );
+
+
+    drawLine(
+
+        {
+            x: 6,
+            y: 0.025,
+            z: 0
+        },
+
+        {
+            x: 6,
+            y: 0.025,
+            z: COURT_LENGTH
+        },
+
+        white,
+
+        3
+
+    );
+
+
+    // 가운데 선
+
+    drawLine(
+
+        {
+            x: 0,
+            y: 0.026,
+            z: 0
+        },
+
+        {
+            x: 0,
+            y: 0.026,
+            z: COURT_LENGTH
+        },
+
+        white,
+
+        2
+
+    );
+
+
+    // 뒤쪽 선
+
+    drawLine(
+
+        {
+            x: -6,
+            y: 0.027,
+            z: 4
+        },
+
+        {
+            x: 6,
+            y: 0.027,
+            z: 4
+        },
+
+        white,
+
+        3
+
+    );
+
+
+    drawLine(
+
+        {
+            x: -6,
+            y: 0.027,
+            z: 28
+        },
+
+        {
+            x: 6,
+            y: 0.027,
+            z: 28
+        },
+
+        white,
+
+        3
+
+    );
+
+}
+
+
+// =====================================================
+// 네트
+// =====================================================
+
+function drawNet() {
+
+    const netHeight = 1.55;
+
+
+    // 네트 기둥
+
+    drawLine(
+
+        {
+            x: -6.5,
+            y: 0,
+            z: NET_Z
+        },
+
+        {
+            x: -6.5,
+            y: netHeight,
+            z: NET_Z
+        },
+
+        "#555",
+
+        6
+
+    );
+
+
+    drawLine(
+
+        {
+            x: 6.5,
+            y: 0,
+            z: NET_Z
+        },
+
+        {
+            x: 6.5,
+            y: netHeight,
+            z: NET_Z
+        },
+
+        "#555",
+
+        6
+
+    );
+
+
+    // 네트 윗부분
+
+    drawLine(
+
+        {
+            x: -6.5,
+            y: netHeight,
+            z: NET_Z
+        },
+
+        {
+            x: 6.5,
+            y: netHeight,
+            z: NET_Z
+        },
+
+        "white",
+
+        7
+
+    );
+
+
+    // 네트 망
+
+    for (
+        let x = -6.5;
+        x <= 6.5;
+        x += 0.65
+    ) {
+
+        drawLine(
+
+            {
+                x: x,
+                y: 0,
+                z: NET_Z
+            },
+
+            {
+                x: x,
+                y: netHeight,
+                z: NET_Z
+            },
+
+            "rgba(255,255,255,0.55)",
+
+            1
+
+        );
+
+    }
+
+
+    for (
+        let y = 0.25;
+        y < netHeight;
+        y += 0.25
+    ) {
+
+        drawLine(
+
+            {
+                x: -6.5,
+                y: y,
+                z: NET_Z
+            },
+
+            {
+                x: 6.5,
+                y: y,
+                z: NET_Z
+            },
+
+            "rgba(255,255,255,0.55)",
+
+            1
+
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// 체육관 조명
+// =====================================================
+
+function drawLights() {
+
+    const lights = [
+
+        -6,
+
+        0,
+
+        6
+
+    ];
+
+
+    for (
+        const x of lights
+    ) {
+
+        const p =
+            project({
+
+                x: x,
+
+                y: WALL_HEIGHT - 0.1,
+
+                z: 10
+
+            });
+
+
+        if (!p) {
+
+            continue;
+
+        }
+
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+
+            p.x,
+
+            p.y,
+
+            65,
+
+            13,
+
+            0,
+
+            0,
+            Math.PI * 2
+
+        );
+
+        ctx.fillStyle =
+            "rgba(255,248,205,0.75)";
+
+        ctx.fill();
+
+    }
+
+}
+
+
+// =====================================================
+// 렌더링
+// =====================================================
+
+function render() {
+
+    // 배경
+
+    ctx.fillStyle =
+        "#202020";
+
+    ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    // 하늘빛 / 천장빛
+
+    const gradient =
+        ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            height
+        );
+
+    gradient.addColorStop(
+        0,
+        "#d9d9d4"
+    );
+
+    gradient.addColorStop(
+        0.5,
+        "#e5e2d8"
+    );
+
+    gradient.addColorStop(
+        1,
+        "#bd8045"
+    );
+
+
+    ctx.fillStyle =
+        gradient;
+
+    ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    // 부드러운 카메라
+
+    camera.yaw +=
+        (targetYaw - camera.yaw)
+        * 0.12;
+
+
+    camera.pitch +=
+        (targetPitch - camera.pitch)
+        * 0.12;
+
+
+    // 체육관
+
+    drawGym();
+
+
+    // 바닥 판자
+
+    drawFloorBoards();
+
+
+    // 코트 라인
+
+    drawCourtLines();
+
+
+    // 네트
+
+    drawNet();
+
+
+    // 조명
+
+    drawLights();
+
+
+    requestAnimationFrame(
+        render
+    );
+
+}
+
+
+render();
+
 </script>
 
 </body>
+
 </html>
 """
 
