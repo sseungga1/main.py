@@ -115,7 +115,7 @@ body {
 
     background: #222;
 
-    cursor: none;
+    cursor: default;
 
 }
 
