@@ -453,7 +453,7 @@ game.addEventListener(
         // -----------------------------------------
 
         targetYaw =
-            horizontal * MAX_YAW;
+            -horizontal * MAX_YAW;
 
 
         // -----------------------------------------
@@ -464,7 +464,7 @@ game.addEventListener(
         // -----------------------------------------
 
         targetPitch =
-            -vertical * MAX_PITCH;
+            vertical * MAX_PITCH;
 
 
         // -----------------------------------------
