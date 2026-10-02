@@ -1143,11 +1143,27 @@ function drawFloor() {
 // 네트
 // =====================================================
 
+// =====================================================
+// 배드민턴 네트
+// =====================================================
+
 function drawNet() {
 
+    // -----------------------------------------
+    // 배드민턴 네트 규격
+    // 중앙 높이 약 1.524m
+    // 양쪽 기둥 높이 약 1.55m
+    // -----------------------------------------
 
-    const netHeight =
-        1.55;
+    const netCenterHeight = 1.524;
+    const netPostHeight = 1.55;
+
+    // 코트 사이드라인에 맞춤
+    const netLeft = -6;
+    const netRight = 6;
+
+    // 네트 위치
+    const netZ = NET_Z;
 
 
     // -----------------------------------------
@@ -1155,100 +1171,61 @@ function drawNet() {
     // -----------------------------------------
 
     drawLine(
-
         {
-            x: -6.5,
+            x: netLeft,
             y: 0,
-            z: NET_Z
+            z: netZ
         },
-
         {
-            x: -6.5,
-            y: netHeight,
-            z: NET_Z
+            x: netLeft,
+            y: netPostHeight,
+            z: netZ
         },
-
-        "#555",
-
-        6
-
-    );
-
-
-    drawLine(
-
-        {
-            x: 6.5,
-            y: 0,
-            z: NET_Z
-        },
-
-        {
-            x: 6.5,
-            y: netHeight,
-            z: NET_Z
-        },
-
-        "#555",
-
-        6
-
-    );
-
-
-    // -----------------------------------------
-    // 네트 맨 위
-    // -----------------------------------------
-
-    drawLine(
-
-        {
-            x: -6.5,
-            y: netHeight,
-            z: NET_Z
-        },
-
-        {
-            x: 6.5,
-            y: netHeight,
-            z: NET_Z
-        },
-
-        "white",
-
+        "#555555",
         7
+    );
 
+    drawLine(
+        {
+            x: netRight,
+            y: 0,
+            z: netZ
+        },
+        {
+            x: netRight,
+            y: netPostHeight,
+            z: netZ
+        },
+        "#555555",
+        7
     );
 
 
     // -----------------------------------------
-    // 세로 망
+    // 네트 본체
+    // 바닥에서부터 시작
     // -----------------------------------------
 
+    // 세로 망
     for (
-        let x = -6.5;
-        x <= 6.5;
-        x += 0.65
+        let x = netLeft;
+        x <= netRight;
+        x += 0.25
     ) {
 
         drawLine(
-
             {
                 x: x,
                 y: 0,
-                z: NET_Z
+                z: netZ
             },
-
             {
                 x: x,
-                y: netHeight,
-                z: NET_Z
+                y: netCenterHeight,
+                z: netZ
             },
-
-            "rgba(255,255,255,0.55)",
-
+            "rgba(20,20,20,0.65)",
             1
-
         );
 
     }
@@ -1259,35 +1236,84 @@ function drawNet() {
     // -----------------------------------------
 
     for (
-        let y = 0.25;
-        y < netHeight;
-        y += 0.25
+        let y = 0.12;
+        y < netCenterHeight;
+        y += 0.12
     ) {
 
         drawLine(
-
             {
-                x: -6.5,
+                x: netLeft,
                 y: y,
-                z: NET_Z
+                z: netZ
             },
-
             {
-                x: 6.5,
+                x: netRight,
                 y: y,
-                z: NET_Z
+                z: netZ
             },
-
-            "rgba(255,255,255,0.55)",
-
+            "rgba(20,20,20,0.65)",
             1
-
         );
 
     }
 
-}
 
+    // -----------------------------------------
+    // 네트 위쪽 흰색 테이프
+    // -----------------------------------------
+
+    drawLine(
+        {
+            x: netLeft,
+            y: netCenterHeight,
+            z: netZ
+        },
+        {
+            x: netRight,
+            y: netCenterHeight,
+            z: netZ
+        },
+        "white",
+        6
+    );
+
+
+    // -----------------------------------------
+    // 기둥 위쪽까지 연결되는 부분
+    // -----------------------------------------
+
+    drawLine(
+        {
+            x: netLeft,
+            y: netCenterHeight,
+            z: netZ
+        },
+        {
+            x: netLeft,
+            y: netPostHeight,
+            z: netZ
+        },
+        "#555555",
+        3
+    );
+
+    drawLine(
+        {
+            x: netRight,
+            y: netCenterHeight,
+            z: netZ
+        },
+        {
+            x: netRight,
+            y: netPostHeight,
+            z: netZ
+        },
+        "#555555",
+        3
+    );
+
+}
 
 // =====================================================
 // 천장 조명
