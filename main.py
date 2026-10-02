@@ -690,40 +690,193 @@ function drawQuad(
 // 3D 선
 // =====================================================
 
+// =====================================================
+// 3D 선
+// 카메라 뒤쪽을 지나가는 선도 화면에 보이는 부분은
+// 잘라서 계속 표시
+// =====================================================
+
 function drawLine(
     a,
     b,
     color,
     lineWidth = 2
 ) {
-    const p1 =
-        project(a);
 
-    const p2 =
-        project(b);
+    // -----------------------------------------
+    // 두 점을 카메라 기준 좌표로 변환
+    // -----------------------------------------
+
+    function cameraSpace(point) {
+
+        let x =
+            point.x - camera.x;
+
+        let y =
+            point.y - camera.y;
+
+        let z =
+            point.z - camera.z;
+
+        // 좌우 회전
+        const cosY =
+            Math.cos(-camera.yaw);
+
+        const sinY =
+            Math.sin(-camera.yaw);
+
+        const rotatedX =
+            x * cosY -
+            z * sinY;
+
+        const rotatedZ =
+            x * sinY +
+            z * cosY;
+
+        // 상하 회전
+        const cosP =
+            Math.cos(-camera.pitch);
+
+        const sinP =
+            Math.sin(-camera.pitch);
+
+        const rotatedY =
+            y * cosP -
+            rotatedZ * sinP;
+
+        const finalZ =
+            y * sinP +
+            rotatedZ * cosP;
+
+        return {
+            x: rotatedX,
+            y: rotatedY,
+            z: finalZ
+        };
+    }
 
 
-    if (!p1 || !p2) {
+    // -----------------------------------------
+    // 카메라 기준 좌표
+    // -----------------------------------------
+
+    let ca =
+        cameraSpace(a);
+
+    let cb =
+        cameraSpace(b);
+
+
+    // -----------------------------------------
+    // 카메라 바로 앞의 최소 거리
+    // -----------------------------------------
+
+    const NEAR =
+        0.05;
+
+
+    // -----------------------------------------
+    // 두 점 모두 카메라 뒤쪽이면
+    // 선 전체가 보이지 않으므로 그리지 않음
+    // -----------------------------------------
+
+    if (
+        ca.z <= NEAR &&
+        cb.z <= NEAR
+    ) {
 
         return;
 
     }
 
 
-    ctx.beginPath();
+    // -----------------------------------------
+    // 한쪽 점이 카메라 뒤에 있다면
+    // 카메라 앞쪽 경계까지 선을 잘라냄
+    // -----------------------------------------
 
+    if (ca.z <= NEAR) {
+
+        const t =
+            (NEAR - ca.z) /
+            (cb.z - ca.z);
+
+        ca = {
+            x: ca.x + (cb.x - ca.x) * t,
+            y: ca.y + (cb.y - ca.y) * t,
+            z: NEAR
+        };
+
+    }
+
+
+    if (cb.z <= NEAR) {
+
+        const t =
+            (NEAR - cb.z) /
+            (ca.z - cb.z);
+
+        cb = {
+            x: cb.x + (ca.x - cb.x) * t,
+            y: cb.y + (ca.y - cb.y) * t,
+            z: NEAR
+        };
+
+    }
+
+
+    // -----------------------------------------
+    // 3D → 2D 투영
+    // -----------------------------------------
+
+    const focal =
+        (width / 2) /
+        Math.tan(
+            (FOV * Math.PI / 180) / 2
+        );
+
+
+    const p1 = {
+
+        x:
+            centerX +
+            (ca.x / ca.z) * focal,
+
+        y:
+            centerY -
+            (ca.y / ca.z) * focal
+
+    };
+
+
+    const p2 = {
+
+        x:
+            centerX +
+            (cb.x / cb.z) * focal,
+
+        y:
+            centerY -
+            (cb.y / cb.z) * focal
+
+    };
+
+
+    // -----------------------------------------
+    // 선 그리기
+    // -----------------------------------------
+
+    ctx.beginPath();
 
     ctx.moveTo(
         p1.x,
         p1.y
     );
 
-
     ctx.lineTo(
         p2.x,
         p2.y
     );
-
 
     ctx.strokeStyle =
         color;
@@ -734,7 +887,6 @@ function drawLine(
     ctx.stroke();
 
 }
-
 
 // =====================================================
 // 체육관
