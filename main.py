@@ -1366,211 +1366,244 @@ function drawFloor() {
 }
 
 
-// =====================================================
-// 네트
-// =====================================================
+
+ // =====================================================
+ // 실제 배드민턴 네트 (BWF 규격 반영)
+ // =====================================================
 
 function drawNet() {
 
-    // =====================================================
-    // 실제 배드민턴 네트
-    // =====================================================
+    const netLeft = -COURT_WIDTH / 2;
+    const netRight = COURT_WIDTH / 2;
 
-    const netLeft =
-        -COURT_WIDTH / 2;       // -3.05m
+    // BWF 네트 규격
+    const NET_TOP_SIDE = 1.55;
+    const NET_TOP_CENTER = 1.524;
+    const NET_VERTICAL_DEPTH = 0.76;
+    const NET_TAPE_HEIGHT = 0.075;
 
-    const netRight =
-        COURT_WIDTH / 2;        // +3.05m
+    // 네트의 위치별 상단 높이
+    function getNetTopHeight(x) {
 
-    const netCenterHeight =
-        1.524;
+        const ratio =
+            Math.abs(x) / (COURT_WIDTH / 2);
 
-    const netPostHeight =
-        1.55;
+        return (
+            NET_TOP_CENTER +
+            (NET_TOP_SIDE - NET_TOP_CENTER) * ratio
+        );
+    }
 
-    const netDepth =
-        0.76;
+    // 네트의 위치별 아래쪽 높이
+    // 반드시 바닥보다 위에 위치하도록 계산
+    function getNetBottomHeight(x) {
 
+        return (
+            getNetTopHeight(x) -
+            NET_VERTICAL_DEPTH
+        );
+    }
 
     // =====================================================
     // 네트 기둥
-    // 기둥은 복식 사이드라인 위에 위치
+    // 복식 사이드라인 위치
     // =====================================================
 
     drawLine(
-
         {
             x: netLeft,
             y: 0,
             z: NET_Z
         },
-
         {
             x: netLeft,
-            y: netPostHeight,
+            y: NET_TOP_SIDE,
             z: NET_Z
         },
-
         "#555555",
-
         7
-
     );
-
 
     drawLine(
-
         {
             x: netRight,
             y: 0,
             z: NET_Z
         },
-
         {
             x: netRight,
-            y: netPostHeight,
+            y: NET_TOP_SIDE,
             z: NET_Z
         },
-
         "#555555",
-
         7
-
     );
-
 
     // =====================================================
     // 네트 본체
-    // 실제 깊이 약 760mm
+    // 아래쪽이 바닥에 닿지 않도록 구현
     // =====================================================
 
-    // 촘촘한 세로 망
+    // 세로 망
     for (
         let x = netLeft;
         x <= netRight;
         x += 0.18
     ) {
 
+        const topY =
+            getNetTopHeight(x) - NET_TAPE_HEIGHT;
+
+        const bottomY =
+            getNetBottomHeight(x);
+
         drawLine(
-
             {
                 x: x,
-                y: 0,
+                y: bottomY,
                 z: NET_Z
             },
-
             {
                 x: x,
-                y: netCenterHeight,
+                y: topY,
                 z: NET_Z
             },
-
-            "rgba(20,20,20,0.72)",
-
+            "rgba(20,20,20,0.78)",
             1
-
         );
-
     }
 
-
-    // 촘촘한 가로 망
+    // 가로 망
+    // 위쪽 테이프 아래부터 네트 하단까지
     for (
-        let y = 0.10;
-        y < netCenterHeight;
-        y += 0.10
+        let t = 0.12;
+        t < 1;
+        t += 0.12
     ) {
 
-        drawLine(
+        for (
+            let x = netLeft;
+            x < netRight;
+            x += 0.18
+        ) {
 
-            {
-                x: netLeft,
-                y: y,
-                z: NET_Z
-            },
+            const nextX =
+                Math.min(x + 0.18, netRight);
 
-            {
-                x: netRight,
-                y: y,
-                z: NET_Z
-            },
+            const bottomY1 =
+                getNetBottomHeight(x);
 
-            "rgba(20,20,20,0.72)",
+            const bottomY2 =
+                getNetBottomHeight(nextX);
 
-            1
+            const topY1 =
+                getNetTopHeight(x) - NET_TAPE_HEIGHT;
 
-        );
+            const topY2 =
+                getNetTopHeight(nextX) - NET_TAPE_HEIGHT;
 
+            const y1 =
+                bottomY1 + (topY1 - bottomY1) * t;
+
+            const y2 =
+                bottomY2 + (topY2 - bottomY2) * t;
+
+            drawLine(
+                {
+                    x: x,
+                    y: y1,
+                    z: NET_Z
+                },
+                {
+                    x: nextX,
+                    y: y2,
+                    z: NET_Z
+                },
+                "rgba(20,20,20,0.78)",
+                1
+            );
+        }
     }
 
+    // 네트 아래쪽 테두리
+    for (
+        let x = netLeft;
+        x < netRight;
+        x += 0.18
+    ) {
+
+        const nextX =
+            Math.min(x + 0.18, netRight);
+
+        drawLine(
+            {
+                x: x,
+                y: getNetBottomHeight(x),
+                z: NET_Z
+            },
+            {
+                x: nextX,
+                y: getNetBottomHeight(nextX),
+                z: NET_Z
+            },
+            "#333333",
+            1.5
+        );
+    }
 
     // =====================================================
-    // 네트 상단 흰색 테이프
+    // 상단 흰색 테이프
+    // 높이 75mm
+    // 중앙 높이 1.524m / 양쪽 높이 1.55m
     // =====================================================
 
-    drawLine(
+    for (
+        let x = netLeft;
+        x < netRight;
+        x += 0.15
+    ) {
 
-        {
-            x: netLeft,
-            y: netPostHeight,
-            z: NET_Z
-        },
+        const nextX =
+            Math.min(x + 0.15, netRight);
 
-        {
-            x: netRight,
-            y: netPostHeight,
-            z: NET_Z
-        },
+        const top1 =
+            getNetTopHeight(x);
 
-        "white",
+        const top2 =
+            getNetTopHeight(nextX);
 
-        6
+        const bottom1 =
+            top1 - NET_TAPE_HEIGHT;
 
-    );
+        const bottom2 =
+            top2 - NET_TAPE_HEIGHT;
 
-
-    // 중앙에서는 1.524m가 되도록
-    // 위쪽 테이프와 망의 높이를 시각적으로 연결
-    drawLine(
-
-        {
-            x: netLeft,
-            y: netPostHeight,
-            z: NET_Z
-        },
-
-        {
-            x: 0,
-            y: netCenterHeight,
-            z: NET_Z
-        },
-
-        "white",
-
-        4
-
-    );
-
-
-    drawLine(
-
-        {
-            x: 0,
-            y: netCenterHeight,
-            z: NET_Z
-        },
-
-        {
-            x: netRight,
-            y: netPostHeight,
-            z: NET_Z
-        },
-
-        "white",
-
-        4
-
-    );
+        drawQuad(
+            [
+                {
+                    x: x,
+                    y: top1,
+                    z: NET_Z
+                },
+                {
+                    x: nextX,
+                    y: top2,
+                    z: NET_Z
+                },
+                {
+                    x: nextX,
+                    y: bottom2,
+                    z: NET_Z
+                },
+                {
+                    x: x,
+                    y: bottom1,
+                    z: NET_Z
+                }
+            ],
+            "white"
+        );
+    }
 
 }
 
