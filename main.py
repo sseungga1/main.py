@@ -721,6 +721,14 @@ function project(point) {
 // 3D 사각형
 // =====================================================
 
+// =====================================================
+// 3D 사각형 / 카메라 앞뒤 클리핑
+// =====================================================
+//
+// 카메라 뒤에 일부 꼭짓점이 있어도
+// 화면에 실제로 보이는 부분은 잘라서 그린다.
+// =====================================================
+
 function drawQuad(
     points,
     fill,
@@ -728,21 +736,221 @@ function drawQuad(
     lineWidth = 1
 ) {
 
-
-    const projected =
-        points.map(project);
+    const NEAR = 0.05;
 
 
+    // -----------------------------------------
+    // 월드 좌표 → 카메라 좌표
+    // -----------------------------------------
+
+    function toCamera(point) {
+
+        let x =
+            point.x - camera.x;
+
+        let y =
+            point.y - camera.y;
+
+        let z =
+            point.z - camera.z;
+
+
+        // 좌우 회전
+        const cosY =
+            Math.cos(-camera.yaw);
+
+        const sinY =
+            Math.sin(-camera.yaw);
+
+
+        const rotatedX =
+            x * cosY -
+            z * sinY;
+
+        const rotatedZ =
+            x * sinY +
+            z * cosY;
+
+
+        // 위아래 회전
+        const cosP =
+            Math.cos(-camera.pitch);
+
+        const sinP =
+            Math.sin(-camera.pitch);
+
+
+        const rotatedY =
+            y * cosP -
+            rotatedZ * sinP;
+
+        const finalZ =
+            y * sinP +
+            rotatedZ * cosP;
+
+
+        return {
+            x: rotatedX,
+            y: rotatedY,
+            z: finalZ
+        };
+
+    }
+
+
+    // -----------------------------------------
+    // 카메라 앞쪽 영역만 남기는 클리핑
+    // -----------------------------------------
+
+    let clipped = [];
+
+
+    for (
+        let i = 0;
+        i < points.length;
+        i++
+    ) {
+
+        const current =
+            toCamera(
+                points[i]
+            );
+
+        const next =
+            toCamera(
+                points[
+                    (i + 1) %
+                    points.length
+                ]
+            );
+
+
+        const currentInside =
+            current.z >= NEAR;
+
+        const nextInside =
+            next.z >= NEAR;
+
+
+        // 현재와 다음 점 모두 화면 앞쪽
+        if (
+            currentInside &&
+            nextInside
+        ) {
+
+            clipped.push(next);
+
+        }
+
+
+        // 현재는 앞, 다음은 뒤
+        else if (
+            currentInside &&
+            !nextInside
+        ) {
+
+            const t =
+                (NEAR - current.z) /
+                (next.z - current.z);
+
+
+            clipped.push({
+                x:
+                    current.x +
+                    (next.x - current.x) * t,
+
+                y:
+                    current.y +
+                    (next.y - current.y) * t,
+
+                z:
+                    NEAR
+            });
+
+        }
+
+
+        // 현재는 뒤, 다음은 앞
+        else if (
+            !currentInside &&
+            nextInside
+        ) {
+
+            const t =
+                (NEAR - current.z) /
+                (next.z - current.z);
+
+
+            clipped.push({
+                x:
+                    current.x +
+                    (next.x - current.x) * t,
+
+                y:
+                    current.y +
+                    (next.y - current.y) * t,
+
+                z:
+                    NEAR
+            });
+
+
+            clipped.push(next);
+
+        }
+
+    }
+
+
+    // 화면에 보이는 부분이 없으면 종료
     if (
-        projected.some(
-            p => p === null
-        )
+        clipped.length < 3
     ) {
 
         return;
 
     }
 
+
+    // -----------------------------------------
+    // 원근 투영
+    // -----------------------------------------
+
+    const focal =
+        (width / 2) /
+        Math.tan(
+            (FOV * Math.PI / 180) / 2
+        );
+
+
+    const projected =
+        clipped.map(
+            point => {
+
+                return {
+
+                    x:
+                        centerX +
+                        (point.x / point.z) *
+                        focal,
+
+                    y:
+                        centerY -
+                        (point.y / point.z) *
+                        focal,
+
+                    depth:
+                        point.z
+
+                };
+
+            }
+        );
+
+
+    // -----------------------------------------
+    // 그리기
+    // -----------------------------------------
 
     ctx.beginPath();
 
