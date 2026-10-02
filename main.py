@@ -348,8 +348,8 @@ const camera = {
     x: 0,
 
     y: 1.7,
-
-    z: 1.5,
+    
+    z: 1.4,
 
     yaw: 0,
 
@@ -696,8 +696,6 @@ function drawLine(
     color,
     lineWidth = 2
 ) {
-
-
     const p1 =
         project(a);
 
@@ -742,13 +740,17 @@ function drawLine(
 // 체육관
 // =====================================================
 
-const COURT_WIDTH = 18;
+const COURT_WIDTH = 6.10;
+const COURT_LENGTH = 13.40;
 
-const COURT_LENGTH = 32;
+// 체육관 자체는 코트보다 넓게 설정
+const GYM_WIDTH = 12;
+const GYM_LENGTH = 20;
 
 const WALL_HEIGHT = 8;
 
-const NET_Z = 17;
+// 코트 중앙 = 13.40 / 2
+const NET_Z = COURT_LENGTH / 2;
 
 
 function drawGym() {
@@ -763,27 +765,27 @@ function drawGym() {
         [
 
             {
-                x: -COURT_WIDTH / 2,
+                x: -GYM_WIDTH / 2,
                 y: 0,
-                z: COURT_LENGTH
+                z: GYM_LENGTH
             },
 
             {
-                x: COURT_WIDTH / 2,
+                x: GYM_WIDTH / 2,
                 y: 0,
-                z: COURT_LENGTH
+                z: GYM_LENGTH
             },
 
             {
-                x: COURT_WIDTH / 2,
+                x: GYM_WIDTH / 2,
                 y: WALL_HEIGHT,
-                z: COURT_LENGTH
+                z: GYM_LENGTH
             },
 
             {
-                x: -COURT_WIDTH / 2,
+                x: -GYM_WIDTH / 2,
                 y: WALL_HEIGHT,
-                z: COURT_LENGTH
+                z: GYM_LENGTH
             }
 
         ],
@@ -802,25 +804,25 @@ function drawGym() {
         [
 
             {
-                x: -COURT_WIDTH / 2,
+                x: -GYM_WIDTH / 2,
                 y: 0,
                 z: 0
             },
 
             {
-                x: -COURT_WIDTH / 2,
+                x: -GYM_WIDTH / 2,
                 y: 0,
-                z: COURT_LENGTH
+                z: GYM_LENGTH
             },
 
             {
-                x: -COURT_WIDTH / 2,
+                x: -GYM_WIDTH / 2,
                 y: WALL_HEIGHT,
-                z: COURT_LENGTH
+                z: GYM_LENGTH
             },
 
             {
-                x: -COURT_WIDTH / 2,
+                x: -GYM_WIDTH / 2,
                 y: WALL_HEIGHT,
                 z: 0
             }
@@ -841,27 +843,27 @@ function drawGym() {
         [
 
             {
-                x: COURT_WIDTH / 2,
+                x: GYM_WIDTH / 2,
                 y: 0,
-                z: COURT_LENGTH
+                z: GYM_LENGTH
             },
 
             {
-                x: COURT_WIDTH / 2,
+                x: GYM_WIDTH / 2,
                 y: 0,
                 z: 0
             },
 
             {
-                x: COURT_WIDTH / 2,
+                x: GYM_WIDTH / 2,
                 y: WALL_HEIGHT,
                 z: 0
             },
 
             {
-                x: COURT_WIDTH / 2,
+                x: GYM_WIDTH / 2,
                 y: WALL_HEIGHT,
-                z: COURT_LENGTH
+                z: GYM_LENGTH
             }
 
         ],
@@ -880,27 +882,27 @@ function drawGym() {
         [
 
             {
-                x: -COURT_WIDTH / 2,
+                x: -GYM_WIDTH / 2,
                 y: WALL_HEIGHT,
                 z: 0
             },
 
             {
-                x: COURT_WIDTH / 2,
+                x: GYM_WIDTH / 2,
                 y: WALL_HEIGHT,
                 z: 0
             },
 
             {
-                x: COURT_WIDTH / 2,
+                x: GYM_WIDTH / 2,
                 y: WALL_HEIGHT,
-                z: COURT_LENGTH
+                z: GYM_LENGTH
             },
 
             {
-                x: -COURT_WIDTH / 2,
+                x: -GYM_WIDTH / 2,
                 y: WALL_HEIGHT,
-                z: COURT_LENGTH
+                z: GYM_LENGTH
             }
 
         ],
@@ -919,27 +921,27 @@ function drawGym() {
         [
 
             {
-                x: -COURT_WIDTH / 2,
+                x: -GYM_WIDTH / 2,
                 y: 0,
                 z: 0
             },
 
             {
-                x: COURT_WIDTH / 2,
+                x: GYM_WIDTH / 2,
                 y: 0,
                 z: 0
             },
 
             {
-                x: COURT_WIDTH / 2,
+                x: GYM_WIDTH / 2,
                 y: 0,
-                z: COURT_LENGTH
+                z: GYM_LENGTH
             },
 
             {
-                x: -COURT_WIDTH / 2,
+                x: -GYM_WIDTH / 2,
                 y: 0,
-                z: COURT_LENGTH
+                z: GYM_LENGTH
             }
 
         ],
@@ -958,29 +960,93 @@ function drawGym() {
 function drawFloor() {
 
 
-    // 가로 나무판
+    // =====================================================
+    // 실제 배드민턴 코트 규격
+    // =====================================================
+    //
+    // 전체 복식 코트:
+    // 폭 6.10m
+    // 길이 13.40m
+    //
+    // 단식 사이드라인:
+    // 복식 사이드라인에서 좌우 각각 0.46m 안쪽
+    //
+    // 짧은 서비스 라인:
+    // 네트에서 각 코트 방향으로 1.98m
+    //
+    // 복식 롱 서비스 라인:
+    // 뒤쪽 경계선에서 0.76m 안쪽
+    //
+    // 중앙선:
+    // 짧은 서비스 라인부터 뒤쪽 경계선까지
+    // =====================================================
 
+
+    const white =
+        "rgba(255,255,255,0.95)";
+
+
+    const doublesHalfWidth =
+        COURT_WIDTH / 2;       // 3.05m
+
+
+    const singlesHalfWidth =
+        5.18 / 2;              // 2.59m
+
+
+    const halfLength =
+        COURT_LENGTH / 2;      // 6.70m
+
+
+    const shortServiceOffset =
+        1.98;
+
+
+    const shortServiceNear =
+        halfLength - shortServiceOffset;
+
+
+    const shortServiceFar =
+        halfLength + shortServiceOffset;
+
+
+    const doublesLongServiceNear =
+        0.76;
+
+
+    const doublesLongServiceFar =
+        COURT_LENGTH - 0.76;
+
+
+    const lineY =
+        0.025;
+
+
+    // =====================================================
+    // 바닥 나무 무늬
+    // =====================================================
+
+    // 가로 나무판
     for (
-        let z = 2;
-        z < COURT_LENGTH;
-        z += 2
+        let z = 1;
+        z < GYM_LENGTH;
+        z += 1
     ) {
 
         drawLine(
 
             {
-                x: -COURT_WIDTH / 2,
+                x: -GYM_WIDTH / 2,
                 y: 0.01,
                 z: z
             },
 
             {
-                x: COURT_WIDTH / 2,
+                x: GYM_WIDTH / 2,
                 y: 0.01,
                 z: z
             },
-
-            "rgba(95,55,20,0.25)",
+                        "rgba(95,55,20,0.20)",
 
             1
 
@@ -990,11 +1056,10 @@ function drawFloor() {
 
 
     // 세로 나무판
-
     for (
-        let x = -8;
-        x <= 8;
-        x += 2
+        let x = -GYM_WIDTH / 2;
+        x <= GYM_WIDTH / 2;
+        x += 1
     ) {
 
         drawLine(
@@ -1008,10 +1073,10 @@ function drawFloor() {
             {
                 x: x,
                 y: 0.015,
-                z: COURT_LENGTH
+                z: GYM_LENGTH
             },
 
-            "rgba(95,55,20,0.18)",
+            "rgba(95,55,20,0.14)",
 
             1
 
@@ -1020,25 +1085,21 @@ function drawFloor() {
     }
 
 
-    // -----------------------------------------
-    // 코트 사이드 라인
-    // -----------------------------------------
-
-    const white =
-        "rgba(255,255,255,0.95)";
-
+    // =====================================================
+    // ① 복식 바깥 사이드라인
+    // =====================================================
 
     drawLine(
 
         {
-            x: -6,
-            y: 0.025,
+            x: -doublesHalfWidth,
+            y: lineY,
             z: 0
         },
 
         {
-            x: -6,
-            y: 0.025,
+            x: -doublesHalfWidth,
+            y: lineY,
             z: COURT_LENGTH
         },
 
@@ -1052,14 +1113,14 @@ function drawFloor() {
     drawLine(
 
         {
-            x: 6,
-            y: 0.025,
+            x: doublesHalfWidth,
+            y: lineY,
             z: 0
         },
 
         {
-            x: 6,
-            y: 0.025,
+            x: doublesHalfWidth,
+            y: lineY,
             z: COURT_LENGTH
         },
 
@@ -1070,20 +1131,209 @@ function drawFloor() {
     );
 
 
-    // 중앙선
+    // =====================================================
+    // ② 단식 안쪽 사이드라인
+    // =====================================================
+
+    drawLine(
+
+        {
+            x: -singlesHalfWidth,
+            y: lineY,
+            z: 0
+        },
+
+        {
+            x: -singlesHalfWidth,
+            y: lineY,
+            z: COURT_LENGTH
+        },
+
+        white,
+
+        2.5
+
+    );
+
+
+    drawLine(
+
+        {
+            x: singlesHalfWidth,
+            y: lineY,
+            z: 0
+        },
+
+        {
+            x: singlesHalfWidth,
+            y: lineY,
+            z: COURT_LENGTH
+        },
+
+        white,
+
+        2.5
+
+    );
+
+
+    // =====================================================
+    // ③ 앞쪽 / 뒤쪽 베이스라인
+    // =====================================================
+
+    drawLine(
+
+        {
+            x: -doublesHalfWidth,
+            y: lineY,
+            z: 0
+        },
+
+        {
+            x: doublesHalfWidth,
+            y: lineY,
+            z: 0
+        },
+
+        white,
+
+        3
+
+    );
+
+
+    drawLine(
+
+        {
+            x: -doublesHalfWidth,
+            y: lineY,
+            z: COURT_LENGTH
+        },
+
+        {
+            x: doublesHalfWidth,
+            y: lineY,
+            z: COURT_LENGTH
+        },
+
+        white,
+
+        3
+
+    );
+
+
+    // =====================================================
+    // ④ 짧은 서비스 라인
+    // 네트에서 양쪽으로 1.98m
+    // =====================================================
+
+    drawLine(
+
+        {
+            x: -doublesHalfWidth,
+            y: lineY,
+            z: shortServiceNear
+        },
+
+        {
+            x: doublesHalfWidth,
+            y: lineY,
+            z: shortServiceNear
+        },
+
+        white,
+
+        2.5
+
+    );
+
+
+    drawLine(
+
+        {
+            x: -doublesHalfWidth,
+            y: lineY,
+            z: shortServiceFar
+        },
+
+        {
+            x: doublesHalfWidth,
+            y: lineY,
+            z: shortServiceFar
+        },
+
+        white,
+
+        2.5
+
+    );
+
+
+    // =====================================================
+    // ⑤ 복식 롱 서비스 라인
+    // 뒤쪽 경계선에서 0.76m 안쪽
+    // =====================================================
+
+    drawLine(
+
+        {
+            x: -doublesHalfWidth,
+            y: lineY,
+            z: doublesLongServiceNear
+        },
+
+        {
+            x: doublesHalfWidth,
+            y: lineY,
+            z: doublesLongServiceNear
+        },
+
+        white,
+
+        2.5
+
+    );
+
+
+    drawLine(
+
+        {
+            x: -doublesHalfWidth,
+            y: lineY,
+            z: doublesLongServiceFar
+        },
+
+        {
+            x: doublesHalfWidth,
+            y: lineY,
+            z: doublesLongServiceFar
+        },
+
+        white,
+
+        2.5
+
+    );
+
+
+    // =====================================================
+    // ⑥ 중앙선
+    // 짧은 서비스 라인부터 반대쪽 뒤쪽까지
+    // =====================================================
 
     drawLine(
 
         {
             x: 0,
-            y: 0.027,
+            y: lineY,
             z: 0
         },
 
         {
             x: 0,
-            y: 0.027,
-            z: COURT_LENGTH
+            y: lineY,
+            z: shortServiceNear
         },
 
         white,
@@ -1093,46 +1343,23 @@ function drawFloor() {
     );
 
 
-    // 뒤쪽 선
-
     drawLine(
 
         {
-            x: -6,
-            y: 0.027,
-            z: 4
+            x: 0,
+            y: lineY,
+            z: shortServiceFar
         },
 
         {
-            x: 6,
-            y: 0.027,
-            z: 4
+            x: 0,
+            y: lineY,
+            z: COURT_LENGTH
         },
 
         white,
 
-        3
-
-    );
-
-
-    drawLine(
-
-        {
-            x: -6,
-            y: 0.027,
-            z: 28
-        },
-
-        {
-            x: 6,
-            y: 0.027,
-            z: 28
-        },
-
-        white,
-
-        3
+        2
 
     );
 
@@ -1143,177 +1370,210 @@ function drawFloor() {
 // 네트
 // =====================================================
 
-// =====================================================
-// 배드민턴 네트
-// =====================================================
-
 function drawNet() {
 
-    // -----------------------------------------
-    // 배드민턴 네트 규격
-    // 중앙 높이 약 1.524m
-    // 양쪽 기둥 높이 약 1.55m
-    // -----------------------------------------
+    // =====================================================
+    // 실제 배드민턴 네트
+    // =====================================================
 
-    const netCenterHeight = 1.524;
-    const netPostHeight = 1.55;
+    const netLeft =
+        -COURT_WIDTH / 2;       // -3.05m
 
-    // 코트 사이드라인에 맞춤
-    const netLeft = -6;
-    const netRight = 6;
+    const netRight =
+        COURT_WIDTH / 2;        // +3.05m
 
-    // 네트 위치
-    const netZ = NET_Z;
+    const netCenterHeight =
+        1.524;
+
+    const netPostHeight =
+        1.55;
+
+    const netDepth =
+        0.76;
 
 
-    // -----------------------------------------
+    // =====================================================
     // 네트 기둥
-    // -----------------------------------------
+    // 기둥은 복식 사이드라인 위에 위치
+    // =====================================================
 
     drawLine(
+
         {
             x: netLeft,
             y: 0,
-            z: netZ
+            z: NET_Z
         },
+
         {
             x: netLeft,
             y: netPostHeight,
-            z: netZ
+            z: NET_Z
         },
+
         "#555555",
+
         7
+
     );
 
+
     drawLine(
+
         {
             x: netRight,
             y: 0,
-            z: netZ
+            z: NET_Z
         },
+
         {
             x: netRight,
             y: netPostHeight,
-            z: netZ
+            z: NET_Z
         },
+
         "#555555",
+
         7
+
     );
 
 
-    // -----------------------------------------
+    // =====================================================
     // 네트 본체
-    // 바닥에서부터 시작
-    // -----------------------------------------
+    // 실제 깊이 약 760mm
+    // =====================================================
 
-    // 세로 망
+    // 촘촘한 세로 망
     for (
         let x = netLeft;
         x <= netRight;
-        x += 0.25
+        x += 0.18
     ) {
 
         drawLine(
+
             {
                 x: x,
                 y: 0,
-                z: netZ
+                z: NET_Z
             },
+
             {
                 x: x,
                 y: netCenterHeight,
-                z: netZ
+                z: NET_Z
             },
-            "rgba(20,20,20,0.65)",
+
+            "rgba(20,20,20,0.72)",
+
             1
+
         );
 
     }
 
 
-    // -----------------------------------------
-    // 가로 망
-    // -----------------------------------------
-
+    // 촘촘한 가로 망
     for (
-        let y = 0.12;
+        let y = 0.10;
         y < netCenterHeight;
-        y += 0.12
+        y += 0.10
     ) {
 
         drawLine(
+
             {
                 x: netLeft,
                 y: y,
-                z: netZ
+                z: NET_Z
             },
+
             {
                 x: netRight,
                 y: y,
-                z: netZ
+                z: NET_Z
             },
-            "rgba(20,20,20,0.65)",
+
+            "rgba(20,20,20,0.72)",
+
             1
+
         );
 
     }
 
 
-    // -----------------------------------------
-    // 네트 위쪽 흰색 테이프
-    // -----------------------------------------
+    // =====================================================
+    // 네트 상단 흰색 테이프
+    // =====================================================
 
     drawLine(
+
         {
             x: netLeft,
-            y: netCenterHeight,
-            z: netZ
+            y: netPostHeight,
+            z: NET_Z
         },
+
         {
             x: netRight,
-            y: netCenterHeight,
-            z: netZ
+            y: netPostHeight,
+            z: NET_Z
         },
+
         "white",
+
         6
+
     );
 
 
-    // -----------------------------------------
-    // 기둥 위쪽까지 연결되는 부분
-    // -----------------------------------------
-
+    // 중앙에서는 1.524m가 되도록
+    // 위쪽 테이프와 망의 높이를 시각적으로 연결
     drawLine(
-        {
-            x: netLeft,
-            y: netCenterHeight,
-            z: netZ
-        },
+
         {
             x: netLeft,
             y: netPostHeight,
-            z: netZ
+            z: NET_Z
         },
-        "#555555",
-        3
+
+        {
+            x: 0,
+            y: netCenterHeight,
+            z: NET_Z
+        },
+
+        "white",
+
+        4
+
     );
 
+
     drawLine(
+
         {
-            x: netRight,
+            x: 0,
             y: netCenterHeight,
-            z: netZ
+            z: NET_Z
         },
+
         {
             x: netRight,
             y: netPostHeight,
-            z: netZ
+            z: NET_Z
         },
-        "#555555",
-        3
+
+        "white",
+
+        4
+
     );
 
 }
+
 
 // =====================================================
 // 천장 조명
@@ -1383,7 +1643,6 @@ function drawLights() {
     }
 
 }
-
 
 // =====================================================
 // 렌더링
