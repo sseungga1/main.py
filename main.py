@@ -1664,20 +1664,23 @@ function drawFloor() {
         1.98;
 
 
-    const shortServiceNear =
-        halfLength - shortServiceOffset;
+   const shortServiceNear =
+    COURT_START_Z +
+    halfLength -
+    shortServiceOffset;
 
+const shortServiceFar =
+    COURT_START_Z +
+    halfLength +
+    shortServiceOffset;
 
-    const shortServiceFar =
-        halfLength + shortServiceOffset;
+const doublesLongServiceNear =
+    COURT_START_Z +
+    0.76;
 
-
-    const doublesLongServiceNear =
-        0.76;
-
-
-    const doublesLongServiceFar =
-        COURT_LENGTH - 0.76;
+const doublesLongServiceFar =
+    COURT_END_Z -
+    0.76;
 
 
     const lineY =
@@ -2090,47 +2093,42 @@ drawLine(
     // 짧은 서비스 라인부터 반대쪽 뒤쪽까지
     // =====================================================
 
-    drawLine(
+   drawLine(
+    {
+        x: 0,
+        y: lineY,
+        z: COURT_START_Z
+    },
 
-        {
-            x: 0,
-            y: lineY,
-            z: 0
-        },
+    {
+        x: 0,
+        y: lineY,
+        z: shortServiceNear
+    },
 
-        {
-            x: 0,
-            y: lineY,
-            z: shortServiceNear
-        },
+    white,
 
-        white,
-
-        2
-
-    );
+    2
+);
 
 
-    drawLine(
+drawLine(
+    {
+        x: 0,
+        y: lineY,
+        z: shortServiceFar
+    },
 
-        {
-            x: 0,
-            y: lineY,
-            z: shortServiceFar
-        },
+    {
+        x: 0,
+        y: lineY,
+        z: COURT_END_Z
+    },
 
-        {
-            x: 0,
-            y: lineY,
-            z: COURT_LENGTH
-        },
+    white,
 
-        white,
-
-        2
-
-    );
-
+    2
+);
 }
 
 
