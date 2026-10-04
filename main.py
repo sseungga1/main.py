@@ -1862,255 +1862,229 @@ for (
 
 
 // =====================================================
+// 배드민턴 코트 라인
+// 네트(NET_Z)를 기준으로 정확하게 배치
+// =====================================================
+
+const courtNear =
+    NET_Z - COURT_LENGTH / 2;
+
+const courtFar =
+    NET_Z + COURT_LENGTH / 2;
+
+
+// -----------------------------------------------------
 // ① 복식 바깥 사이드라인
-// =====================================================
+// 폭 6.10m
+// -----------------------------------------------------
 
 drawLine(
-
     {
         x: -doublesHalfWidth,
         y: lineY,
-        z: COURT_START_Z
+        z: courtNear
     },
-
     {
         x: -doublesHalfWidth,
         y: lineY,
-        z: COURT_END_Z
+        z: courtFar
     },
-
     white,
-
     3
-
 );
-
 
 drawLine(
-
     {
         x: doublesHalfWidth,
         y: lineY,
-        z: COURT_START_Z
+        z: courtNear
     },
-
     {
         x: doublesHalfWidth,
         y: lineY,
-        z: COURT_END_Z
+        z: courtFar
     },
-
     white,
-
     3
-
 );
 
 
-// =====================================================
+// -----------------------------------------------------
 // ② 단식 안쪽 사이드라인
-// =====================================================
+// 폭 5.18m
+// -----------------------------------------------------
 
 drawLine(
-
     {
         x: -singlesHalfWidth,
         y: lineY,
-        z: COURT_START_Z
+        z: courtNear
     },
-
     {
         x: -singlesHalfWidth,
         y: lineY,
-        z: COURT_END_Z
+        z: courtFar
     },
-
     white,
-
     2.5
-
 );
 
-
 drawLine(
-
     {
         x: singlesHalfWidth,
         y: lineY,
-        z: COURT_START_Z
+        z: courtNear
     },
-
     {
         x: singlesHalfWidth,
         y: lineY,
-        z: COURT_END_Z
+        z: courtFar
     },
-
     white,
-
     2.5
-
 );
 
-  drawLine(
 
+// -----------------------------------------------------
+// ③ 앞쪽 / 뒤쪽 베이스라인
+// -----------------------------------------------------
+
+drawLine(
     {
         x: -doublesHalfWidth,
         y: lineY,
-        z: COURT_START_Z
+        z: courtNear
     },
-
     {
         x: doublesHalfWidth,
         y: lineY,
-        z: COURT_START_Z
+        z: courtNear
     },
-
     white,
-
     3
-
 );
+
+drawLine(
+    {
+        x: -doublesHalfWidth,
+        y: lineY,
+        z: courtFar
+    },
+    {
+        x: doublesHalfWidth,
+        y: lineY,
+        z: courtFar
+    },
+    white,
+    3
+);
+
+
+// -----------------------------------------------------
+// ④ 짧은 서비스 라인
+// 네트에서 각 방향으로 정확히 1.98m
+// -----------------------------------------------------
+
+const shortServiceNear =
+    NET_Z - 1.98;
+
+const shortServiceFar =
+    NET_Z + 1.98;
 
 
 drawLine(
-
     {
         x: -doublesHalfWidth,
         y: lineY,
-        z: COURT_END_Z
+        z: shortServiceNear
     },
-
     {
         x: doublesHalfWidth,
         y: lineY,
-        z: COURT_END_Z
+        z: shortServiceNear
     },
-
     white,
+    2.5
+);
 
-    3
-
+drawLine(
+    {
+        x: -doublesHalfWidth,
+        y: lineY,
+        z: shortServiceFar
+    },
+    {
+        x: doublesHalfWidth,
+        y: lineY,
+        z: shortServiceFar
+    },
+    white,
+    2.5
 );
 
 
-    // =====================================================
-    // ④ 짧은 서비스 라인
-    // 네트에서 양쪽으로 1.98m
-    // =====================================================
+// -----------------------------------------------------
+// ⑤ 복식 롱 서비스 라인
+// 각 뒤쪽 베이스라인에서 0.76m 안쪽
+// -----------------------------------------------------
 
-    drawLine(
+const doublesLongServiceNear =
+    courtNear + 0.76;
 
-        {
-            x: -doublesHalfWidth,
-            y: lineY,
-            z: shortServiceNear
-        },
-
-        {
-            x: doublesHalfWidth,
-            y: lineY,
-            z: shortServiceNear
-        },
-
-        white,
-
-        2.5
-
-    );
+const doublesLongServiceFar =
+    courtFar - 0.76;
 
 
-    drawLine(
+drawLine(
+    {
+        x: -doublesHalfWidth,
+        y: lineY,
+        z: doublesLongServiceNear
+    },
+    {
+        x: doublesHalfWidth,
+        y: lineY,
+        z: doublesLongServiceNear
+    },
+    white,
+    2.5
+);
 
-        {
-            x: -doublesHalfWidth,
-            y: lineY,
-            z: shortServiceFar
-        },
-
-        {
-            x: doublesHalfWidth,
-            y: lineY,
-            z: shortServiceFar
-        },
-
-        white,
-
-        2.5
-
-    );
-
-
-    // =====================================================
-    // ⑤ 복식 롱 서비스 라인
-    // 뒤쪽 경계선에서 0.76m 안쪽
-    // =====================================================
-
-    drawLine(
-
-        {
-            x: -doublesHalfWidth,
-            y: lineY,
-            z: doublesLongServiceNear
-        },
-
-        {
-            x: doublesHalfWidth,
-            y: lineY,
-            z: doublesLongServiceNear
-        },
-
-        white,
-
-        2.5
-
-    );
+drawLine(
+    {
+        x: -doublesHalfWidth,
+        y: lineY,
+        z: doublesLongServiceFar
+    },
+    {
+        x: doublesHalfWidth,
+        y: lineY,
+        z: doublesLongServiceFar
+    },
+    white,
+    2.5
+);
 
 
-    drawLine(
+// -----------------------------------------------------
+// ⑥ 중앙선
+// 각 코트의 짧은 서비스 라인부터 뒤쪽까지
+// -----------------------------------------------------
 
-        {
-            x: -doublesHalfWidth,
-            y: lineY,
-            z: doublesLongServiceFar
-        },
-
-        {
-            x: doublesHalfWidth,
-            y: lineY,
-            z: doublesLongServiceFar
-        },
-
-        white,
-
-        2.5
-
-    );
-
-
-    // =====================================================
-    // ⑥ 중앙선
-    // 짧은 서비스 라인부터 반대쪽 뒤쪽까지
-    // =====================================================
-
-   drawLine(
+drawLine(
     {
         x: 0,
         y: lineY,
-        z: COURT_START_Z
+        z: courtNear
     },
-
     {
         x: 0,
         y: lineY,
         z: shortServiceNear
     },
-
     white,
-
     2
 );
-
 
 drawLine(
     {
@@ -2118,20 +2092,14 @@ drawLine(
         y: lineY,
         z: shortServiceFar
     },
-
     {
         x: 0,
         y: lineY,
-        z: COURT_END_Z
+        z: courtFar
     },
-
     white,
-
     2
 );
-}
-
-
 
  // =====================================================
  // 실제 배드민턴 네트 (BWF 규격 반영)
