@@ -2193,12 +2193,12 @@ function render() {
 
     camera.yaw +=
         (targetYaw - camera.yaw)
-        * 0.12;
+        * 0.35;
 
 
     camera.pitch +=
         (targetPitch - camera.pitch)
-        * 0.12;
+        * 0.35;
 
 
     // -----------------------------------------
