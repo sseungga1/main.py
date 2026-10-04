@@ -349,7 +349,7 @@ const camera = {
 
     y: 1.7,
     
-    z: 1.4,
+    z: 5.0,
 
     yaw: 0,
 
