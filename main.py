@@ -1214,8 +1214,20 @@ const GYM_LENGTH = 20;
 
 const WALL_HEIGHT = 8;
 
-// 코트 중앙 = 13.40 / 2
-const NET_Z = COURT_LENGTH / 2;
+// -----------------------------------------------------
+// 체육관 안에서 코트를 정확히 가운데 배치
+// 체육관 20m - 코트 13.4m = 6.6m
+// 양쪽 여백 = 3.3m
+// -----------------------------------------------------
+const COURT_START_Z =
+    (GYM_LENGTH - COURT_LENGTH) / 2;
+
+const COURT_END_Z =
+    COURT_START_Z + COURT_LENGTH;
+
+// 코트 중앙에 네트 배치
+const NET_Z =
+    COURT_START_Z + COURT_LENGTH / 2;
 
 
 function drawGym() {
@@ -1661,142 +1673,137 @@ for (
 }
 
 
-    // =====================================================
-    // ① 복식 바깥 사이드라인
-    // =====================================================
+// =====================================================
+// ① 복식 바깥 사이드라인
+// =====================================================
 
-    drawLine(
+drawLine(
 
-        {
-            x: -doublesHalfWidth,
-            y: lineY,
-            z: 0
-        },
+    {
+        x: -doublesHalfWidth,
+        y: lineY,
+        z: COURT_START_Z
+    },
 
-        {
-            x: -doublesHalfWidth,
-            y: lineY,
-            z: COURT_LENGTH
-        },
+    {
+        x: -doublesHalfWidth,
+        y: lineY,
+        z: COURT_END_Z
+    },
 
-        white,
+    white,
 
-        3
+    3
 
-    );
-
-
-    drawLine(
-
-        {
-            x: doublesHalfWidth,
-            y: lineY,
-            z: 0
-        },
-
-        {
-            x: doublesHalfWidth,
-            y: lineY,
-            z: COURT_LENGTH
-        },
-
-        white,
-
-        3
-
-    );
+);
 
 
-    // =====================================================
-    // ② 단식 안쪽 사이드라인
-    // =====================================================
+drawLine(
 
-    drawLine(
+    {
+        x: doublesHalfWidth,
+        y: lineY,
+        z: COURT_START_Z
+    },
 
-        {
-            x: -singlesHalfWidth,
-            y: lineY,
-            z: 0
-        },
+    {
+        x: doublesHalfWidth,
+        y: lineY,
+        z: COURT_END_Z
+    },
 
-        {
-            x: -singlesHalfWidth,
-            y: lineY,
-            z: COURT_LENGTH
-        },
+    white,
 
-        white,
+    3
 
-        2.5
-
-    );
+);
 
 
-    drawLine(
+// =====================================================
+// ② 단식 안쪽 사이드라인
+// =====================================================
 
-        {
-            x: singlesHalfWidth,
-            y: lineY,
-            z: 0
-        },
+drawLine(
 
-        {
-            x: singlesHalfWidth,
-            y: lineY,
-            z: COURT_LENGTH
-        },
+    {
+        x: -singlesHalfWidth,
+        y: lineY,
+        z: COURT_START_Z
+    },
 
-        white,
+    {
+        x: -singlesHalfWidth,
+        y: lineY,
+        z: COURT_END_Z
+    },
 
-        2.5
+    white,
 
-    );
+    2.5
 
-
-    // =====================================================
-    // ③ 앞쪽 / 뒤쪽 베이스라인
-    // =====================================================
-
-    drawLine(
-
-        {
-            x: -doublesHalfWidth,
-            y: lineY,
-            z: 0
-        },
-
-        {
-            x: doublesHalfWidth,
-            y: lineY,
-            z: 0
-        },
-
-        white,
-
-        3
-
-    );
+);
 
 
-    drawLine(
+drawLine(
 
-        {
-            x: -doublesHalfWidth,
-            y: lineY,
-            z: COURT_LENGTH
-        },
+    {
+        x: singlesHalfWidth,
+        y: lineY,
+        z: COURT_START_Z
+    },
 
-        {
-            x: doublesHalfWidth,
-            y: lineY,
-            z: COURT_LENGTH
-        },
+    {
+        x: singlesHalfWidth,
+        y: lineY,
+        z: COURT_END_Z
+    },
 
-        white,
+    white,
 
-        3
+    2.5
 
-    );
+);
+
+  drawLine(
+
+    {
+        x: -doublesHalfWidth,
+        y: lineY,
+        z: COURT_START_Z
+    },
+
+    {
+        x: doublesHalfWidth,
+        y: lineY,
+        z: COURT_START_Z
+    },
+
+    white,
+
+    3
+
+);
+
+
+drawLine(
+
+    {
+        x: -doublesHalfWidth,
+        y: lineY,
+        z: COURT_END_Z
+    },
+
+    {
+        x: doublesHalfWidth,
+        y: lineY,
+        z: COURT_END_Z
+    },
+
+    white,
+
+    3
+
+);
 
 
     // =====================================================
