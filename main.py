@@ -561,9 +561,23 @@ window.addEventListener(
 // W A S D 이동
 // =====================================================
 
-const keys = {};
+const keys = {
+    w: false,
+    a: false,
+    s: false,
+    d: false
+};
 
-window.addEventListener(
+
+// 게임 화면이 키보드 입력을 받을 수 있도록 설정
+game.tabIndex = 0;
+
+
+// =====================================================
+// 키를 눌렀을 때
+// =====================================================
+
+document.addEventListener(
     "keydown",
     function(event) {
 
@@ -587,7 +601,11 @@ window.addEventListener(
 );
 
 
-window.addEventListener(
+// =====================================================
+// 키를 뗐을 때
+// =====================================================
+
+document.addEventListener(
     "keyup",
     function(event) {
 
@@ -612,6 +630,20 @@ window.addEventListener(
 
 
 // =====================================================
+// 게임 화면을 클릭하면 키보드 포커스
+// =====================================================
+
+game.addEventListener(
+    "mousedown",
+    function() {
+
+        game.focus();
+
+    }
+);
+
+
+// =====================================================
 // 이동 속도
 // =====================================================
 
@@ -624,7 +656,7 @@ const MOVE_SPEED = 0.08;
 
 function updateMovement() {
 
-    // 현재 카메라가 바라보는 방향
+    // 현재 바라보는 방향
     const forwardX =
         -Math.sin(camera.yaw);
 
@@ -632,7 +664,7 @@ function updateMovement() {
         Math.cos(camera.yaw);
 
 
-    // 오른쪽 방향
+    // 현재 바라보는 방향의 오른쪽
     const rightX =
         Math.cos(camera.yaw);
 
@@ -644,7 +676,7 @@ function updateMovement() {
     // W : 앞으로
     // -----------------------------------------
 
-    if (keys["w"]) {
+    if (keys.w) {
 
         camera.x +=
             forwardX *
@@ -661,7 +693,7 @@ function updateMovement() {
     // S : 뒤로
     // -----------------------------------------
 
-    if (keys["s"]) {
+    if (keys.s) {
 
         camera.x -=
             forwardX *
@@ -678,7 +710,7 @@ function updateMovement() {
     // A : 왼쪽
     // -----------------------------------------
 
-    if (keys["a"]) {
+    if (keys.a) {
 
         camera.x -=
             rightX *
@@ -695,7 +727,7 @@ function updateMovement() {
     // D : 오른쪽
     // -----------------------------------------
 
-    if (keys["d"]) {
+    if (keys.d) {
 
         camera.x +=
             rightX *
