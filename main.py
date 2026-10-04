@@ -558,6 +558,159 @@ window.addEventListener(
 
 
 // =====================================================
+// W A S D 이동
+// =====================================================
+
+const keys = {};
+
+window.addEventListener(
+    "keydown",
+    function(event) {
+
+        const key =
+            event.key.toLowerCase();
+
+        if (
+            key === "w" ||
+            key === "a" ||
+            key === "s" ||
+            key === "d"
+        ) {
+
+            keys[key] = true;
+
+            event.preventDefault();
+
+        }
+
+    }
+);
+
+
+window.addEventListener(
+    "keyup",
+    function(event) {
+
+        const key =
+            event.key.toLowerCase();
+
+        if (
+            key === "w" ||
+            key === "a" ||
+            key === "s" ||
+            key === "d"
+        ) {
+
+            keys[key] = false;
+
+            event.preventDefault();
+
+        }
+
+    }
+);
+
+
+// =====================================================
+// 이동 속도
+// =====================================================
+
+const MOVE_SPEED = 0.08;
+
+
+// =====================================================
+// 카메라 이동
+// =====================================================
+
+function updateMovement() {
+
+    // 현재 카메라가 바라보는 방향
+    const forwardX =
+        -Math.sin(camera.yaw);
+
+    const forwardZ =
+        Math.cos(camera.yaw);
+
+
+    // 오른쪽 방향
+    const rightX =
+        Math.cos(camera.yaw);
+
+    const rightZ =
+        Math.sin(camera.yaw);
+
+
+    // -----------------------------------------
+    // W : 앞으로
+    // -----------------------------------------
+
+    if (keys["w"]) {
+
+        camera.x +=
+            forwardX *
+            MOVE_SPEED;
+
+        camera.z +=
+            forwardZ *
+            MOVE_SPEED;
+
+    }
+
+
+    // -----------------------------------------
+    // S : 뒤로
+    // -----------------------------------------
+
+    if (keys["s"]) {
+
+        camera.x -=
+            forwardX *
+            MOVE_SPEED;
+
+        camera.z -=
+            forwardZ *
+            MOVE_SPEED;
+
+    }
+
+
+    // -----------------------------------------
+    // A : 왼쪽
+    // -----------------------------------------
+
+    if (keys["a"]) {
+
+        camera.x -=
+            rightX *
+            MOVE_SPEED;
+
+        camera.z -=
+            rightZ *
+            MOVE_SPEED;
+
+    }
+
+
+    // -----------------------------------------
+    // D : 오른쪽
+    // -----------------------------------------
+
+    if (keys["d"]) {
+
+        camera.x +=
+            rightX *
+            MOVE_SPEED;
+
+        camera.z +=
+            rightZ *
+            MOVE_SPEED;
+
+    }
+
+}
+
+
+// =====================================================
 // 마우스가 게임 화면에 들어왔을 때
 // =====================================================
 
@@ -1499,7 +1652,7 @@ function drawFloor() {
         0.025;
 
 
-  // =====================================================
+// =====================================================
 // 바닥 나무 무늬
 // 사진처럼 길고 좁은 마룻판 형태
 // =====================================================
@@ -2265,6 +2418,8 @@ function drawLights() {
 // =====================================================
 
 function render() {
+
+    updateMovement();
 
 
     // -----------------------------------------
