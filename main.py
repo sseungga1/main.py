@@ -1896,6 +1896,90 @@ for (
 }
 
 
+    // =====================================================
+    // 배드민턴 코트 라인
+    // 네트 중심 기준으로 양쪽 대칭
+    // =====================================================
+
+    // ① 복식 사이드라인
+    drawLine(
+        { x: -doublesHalfWidth, y: lineY, z: COURT_START_Z },
+        { x: -doublesHalfWidth, y: lineY, z: COURT_END_Z },
+        white, 2
+    );
+
+    drawLine(
+        { x: doublesHalfWidth, y: lineY, z: COURT_START_Z },
+        { x: doublesHalfWidth, y: lineY, z: COURT_END_Z },
+        white, 2
+    );
+
+    // ② 단식 사이드라인
+    drawLine(
+        { x: -singlesHalfWidth, y: lineY, z: COURT_START_Z },
+        { x: -singlesHalfWidth, y: lineY, z: COURT_END_Z },
+        white, 2
+    );
+
+    drawLine(
+        { x: singlesHalfWidth, y: lineY, z: COURT_START_Z },
+        { x: singlesHalfWidth, y: lineY, z: COURT_END_Z },
+        white, 2
+    );
+
+    // ③ 양쪽 코트의 끝선
+    drawLine(
+        { x: -doublesHalfWidth, y: lineY, z: COURT_START_Z },
+        { x: doublesHalfWidth, y: lineY, z: COURT_START_Z },
+        white, 2
+    );
+
+    drawLine(
+        { x: -doublesHalfWidth, y: lineY, z: COURT_END_Z },
+        { x: doublesHalfWidth, y: lineY, z: COURT_END_Z },
+        white, 2
+    );
+
+    // ④ 네트에서 1.98m 떨어진 짧은 서비스 라인
+    drawLine(
+        { x: -doublesHalfWidth, y: lineY, z: shortServiceNear },
+        { x: doublesHalfWidth, y: lineY, z: shortServiceNear },
+        white, 2
+    );
+
+    drawLine(
+        { x: -doublesHalfWidth, y: lineY, z: shortServiceFar },
+        { x: doublesHalfWidth, y: lineY, z: shortServiceFar },
+        white, 2
+    );
+
+    // ⑤ 복식 롱 서비스 라인
+    drawLine(
+        { x: -doublesHalfWidth, y: lineY, z: doublesLongServiceNear },
+        { x: doublesHalfWidth, y: lineY, z: doublesLongServiceNear },
+        white, 2
+    );
+
+    drawLine(
+        { x: -doublesHalfWidth, y: lineY, z: doublesLongServiceFar },
+        { x: doublesHalfWidth, y: lineY, z: doublesLongServiceFar },
+        white, 2
+    );
+
+    // ⑥ 중앙선: 각 코트의 서비스 구역
+    drawLine(
+        { x: 0, y: lineY, z: COURT_START_Z },
+        { x: 0, y: lineY, z: shortServiceNear },
+        white, 2
+    );
+
+    drawLine(
+        { x: 0, y: lineY, z: shortServiceFar },
+        { x: 0, y: lineY, z: COURT_END_Z },
+        white, 2
+    );
+
+
 // =====================================================
 // drawFloor() 종료
 // =====================================================
