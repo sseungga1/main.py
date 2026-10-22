@@ -727,6 +727,7 @@ function updateMovement() {
     // D : 오른쪽
     // -----------------------------------------
 
+   
     if (keys.d) {
 
         camera.x +=
@@ -739,7 +740,27 @@ function updateMovement() {
 
     }
 
+    // 체육관 벽 밖으로 나가지 못하게 제한
+    const WALL_MARGIN = 0.3;
+
+    camera.x = Math.max(
+        -GYM_WIDTH / 2 + WALL_MARGIN,
+        Math.min(
+            GYM_WIDTH / 2 - WALL_MARGIN,
+            camera.x
+        )
+    );
+
+    camera.z = Math.max(
+        WALL_MARGIN,
+        Math.min(
+            GYM_LENGTH - WALL_MARGIN,
+            camera.z
+        )
+    );
+
 }
+
 
 
 // =====================================================
@@ -1615,6 +1636,20 @@ function drawGym() {
 }
 
 
+function drawRearWall() {
+    drawQuad(
+        [
+            { x: -GYM_WIDTH / 2, y: 0, z: 0 },
+            { x: GYM_WIDTH / 2, y: 0, z: 0 },
+            { x: GYM_WIDTH / 2, y: WALL_HEIGHT, z: 0 },
+            { x: -GYM_WIDTH / 2, y: WALL_HEIGHT, z: 0 }
+        ],
+        "#e6e3da"
+    );
+}
+
+
+
 // =====================================================
 // 체육관 바닥 나무 무늬
 // =====================================================
@@ -2256,6 +2291,13 @@ function render() {
     // -----------------------------------------
 
     drawFloor();
+
+
+    //------------------------------------------
+    // 
+    //------------------------------------------
+
+    drawRearWall();
 
 
     // -----------------------------------------
