@@ -1556,43 +1556,32 @@ function drawGym() {
     );
 
 
+   
     // -----------------------------------------
-    // 천장
+    // 삼각형 지붕 - 높이 설정
     // -----------------------------------------
+    const ROOF_PEAK_Y = WALL_HEIGHT + 2.4;
 
-    drawQuad(
+    // -----------------------------------------
+    // 왼쪽 경사면
+    // -----------------------------------------
+    drawQuad([
+        { x: -GYM_WIDTH / 2, y: WALL_HEIGHT, z: 0 },
+        { x: 0, y: ROOF_PEAK_Y, z: 0 },
+        { x: 0, y: ROOF_PEAK_Y, z: GYM_LENGTH },
+        { x: -GYM_WIDTH / 2, y: WALL_HEIGHT, z: GYM_LENGTH }
+    ], "#d9dcdd");
 
-        [
+    // -----------------------------------------
+    // 오른쪽 경사면
+    // -----------------------------------------
+    drawQuad([
+        { x: 0, y: ROOF_PEAK_Y, z: 0 },
+        { x: GYM_WIDTH / 2, y: WALL_HEIGHT, z: 0 },
+        { x: GYM_WIDTH / 2, y: WALL_HEIGHT, z: GYM_LENGTH },
+        { x: 0, y: ROOF_PEAK_Y, z: GYM_LENGTH }
+    ], "#c9ced1");
 
-            {
-                x: -GYM_WIDTH / 2,
-                y: WALL_HEIGHT,
-                z: 0
-            },
-
-            {
-                x: GYM_WIDTH / 2,
-                y: WALL_HEIGHT,
-                z: 0
-            },
-
-            {
-                x: GYM_WIDTH / 2,
-                y: WALL_HEIGHT,
-                z: GYM_LENGTH
-            },
-
-            {
-                x: -GYM_WIDTH / 2,
-                y: WALL_HEIGHT,
-                z: GYM_LENGTH
-            }
-
-        ],
-
-        "#d3d0c8"
-
-    );
 
 
     // -----------------------------------------
