@@ -2401,8 +2401,6 @@ function render() {
     // 조명
     // -----------------------------------------
 
-    drawLights();
-
 
     requestAnimationFrame(
         render
