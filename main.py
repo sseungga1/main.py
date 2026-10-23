@@ -1477,6 +1477,15 @@ function drawGym() {
 
     );
 
+    
+    // 뒷벽 위쪽 삼각형
+    drawQuad([
+        { x: -GYM_WIDTH / 2, y: WALL_HEIGHT, z: GYM_LENGTH },
+        { x: GYM_WIDTH / 2, y: WALL_HEIGHT, z: GYM_LENGTH },
+        { x: 0, y: WALL_HEIGHT + 2.4, z: GYM_LENGTH },
+        { x: 0, y: WALL_HEIGHT + 2.4, z: GYM_LENGTH }
+    ], "#e6e3da");
+
 
     // -----------------------------------------
     // 왼쪽 벽
@@ -1626,6 +1635,7 @@ function drawGym() {
 
 
 function drawRearWall() {
+    //기존 앞
     drawQuad(
         [
             { x: -GYM_WIDTH / 2, y: 0, z: 0 },
@@ -1635,8 +1645,15 @@ function drawRearWall() {
         ],
         "#e6e3da"
     );
-}
 
+    // 앞벽 위쪽 삼각형
+    drawQuad([
+        { x: -GYM_WIDTH / 2, y: WALL_HEIGHT, z: 0 },
+        { x: GYM_WIDTH / 2, y: WALL_HEIGHT, z: 0 },
+        { x: 0, y: WALL_HEIGHT + 2.4, z: 0 },
+        { x: 0, y: WALL_HEIGHT + 2.4, z: 0 }
+    ], "#e6e3da");
+}
 
 
 // =====================================================
