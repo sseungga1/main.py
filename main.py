@@ -1656,6 +1656,113 @@ function drawRearWall() {
 }
 
 
+
+ // =====================================================
+// 대칭형 천장 철골 구조물 3개
+// =====================================================
+
+function drawSteelTrusses() {
+
+    const ROOF_PEAK_Y = WALL_HEIGHT + 2.4;
+
+    // 세 구조물의 위치: 앞쪽 / 중앙 / 뒤쪽
+    const trussPositions = [
+        GYM_LENGTH * 0.25,
+        GYM_LENGTH * 0.50,
+        GYM_LENGTH * 0.75
+    ];
+
+    // 철골 색상과 굵기
+    const STEEL_COLOR = "#69747b";
+    const STEEL_HIGHLIGHT = "#aab3b8";
+    const STEEL_WIDTH = 5;
+    const HIGHLIGHT_WIDTH = 1.5;
+
+    for (const z of trussPositions) {
+
+        // -----------------------------------------
+        // 삼각형의 기준점
+        // -----------------------------------------
+
+        const left = {
+            x: -GYM_WIDTH / 2,
+            y: WALL_HEIGHT,
+            z: z
+        };
+
+        const peak = {
+            x: 0,
+            y: ROOF_PEAK_Y,
+            z: z
+        };
+
+        const right = {
+            x: GYM_WIDTH / 2,
+            y: WALL_HEIGHT,
+            z: z
+        };
+
+        // 아래쪽 수평 연결 보
+        const bottom = {
+            x: 0,
+            y: WALL_HEIGHT,
+            z: z
+        };
+
+        // 내부 보강재가 만나는 지점
+        const leftInner = {
+            x: -GYM_WIDTH / 4,
+            y: WALL_HEIGHT + 1.2,
+            z: z
+        };
+
+        const rightInner = {
+            x: GYM_WIDTH / 4,
+            y: WALL_HEIGHT + 1.2,
+            z: z
+        };
+
+        // -----------------------------------------
+        // ① 삼각형 외곽 철골
+        // -----------------------------------------
+
+        drawLine(left, peak, STEEL_COLOR, STEEL_WIDTH);
+        drawLine(peak, right, STEEL_COLOR, STEEL_WIDTH);
+        drawLine(left, right, STEEL_COLOR, STEEL_WIDTH);
+
+        // -----------------------------------------
+        // ② 내부 대칭 보강재
+        // -----------------------------------------
+
+        drawLine(left, leftInner, STEEL_COLOR, STEEL_WIDTH);
+        drawLine(leftInner, peak, STEEL_COLOR, STEEL_WIDTH);
+
+        drawLine(peak, rightInner, STEEL_COLOR, STEEL_WIDTH);
+        drawLine(rightInner, right, STEEL_COLOR, STEEL_WIDTH);
+
+        drawLine(leftInner, bottom, STEEL_COLOR, STEEL_WIDTH);
+        drawLine(bottom, rightInner, STEEL_COLOR, STEEL_WIDTH);
+
+        // -----------------------------------------
+        // ③ 철골에 밝은 면을 더해 입체감 표현
+        // -----------------------------------------
+
+        drawLine(left, peak, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+        drawLine(peak, right, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+        drawLine(left, right, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+
+        drawLine(left, leftInner, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+        drawLine(leftInner, peak, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+
+        drawLine(peak, rightInner, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+        drawLine(rightInner, right, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+
+        drawLine(leftInner, bottom, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+        drawLine(bottom, rightInner, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+    }
+}
+
+
 // =====================================================
 // 체육관 바닥 나무 무늬
 // =====================================================
