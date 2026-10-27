@@ -1889,10 +1889,202 @@ function drawSteelTrusses() {
 }
 
 // =====================================================
-// 체육관 바닥 나무 무늬
+// 케빈 캐릭터 - 노란색 기본 몸체
+// 전체 높이 1.2m
 // =====================================================
 
-function drawFloor() {
+function drawKevin() {
+
+    // -----------------------------------------
+    // 1. 캐릭터 위치
+    // 상대 코트 중앙 부근
+    // -----------------------------------------
+
+    const K = {
+        x: 0,
+        z: NET_Z + 2.5
+    };
+
+    const YELLOW = "#f6cc35";
+    const YELLOW_LIGHT = "#ffdc50";
+    const YELLOW_DARK = "#dcae20";
+
+    // -----------------------------------------
+    // 2. 몸통과 둥근 머리
+    // 높이: 약 1m
+    // -----------------------------------------
+
+    const bodyLevels = [
+        { y: 0.22, rx: 0.15, rz: 0.14 },
+        { y: 0.30, rx: 0.21, rz: 0.17 },
+        { y: 0.48, rx: 0.23, rz: 0.18 },
+        { y: 0.70, rx: 0.24, rz: 0.19 },
+        { y: 0.91, rx: 0.23, rz: 0.18 },
+        { y: 1.07, rx: 0.20, rz: 0.16 },
+        { y: 1.15, rx: 0.14, rz: 0.12 },
+        { y: 1.20, rx: 0.06, rz: 0.06 }
+    ];
+
+    const segments = 12;
+
+    for (let level = 0; level < bodyLevels.length - 1; level++) {
+
+        const lower = bodyLevels[level];
+        const upper = bodyLevels[level + 1];
+
+        for (let i = 0; i < segments; i++) {
+
+            const a1 = (i / segments) * Math.PI * 2;
+            const a2 = ((i + 1) / segments) * Math.PI * 2;
+
+            const p1 = {
+                x: K.x + Math.cos(a1) * lower.rx,
+                y: lower.y,
+                z: K.z + Math.sin(a1) * lower.rz
+            };
+
+            const p2 = {
+                x: K.x + Math.cos(a2) * lower.rx,
+                y: lower.y,
+                z: K.z + Math.sin(a2) * lower.rz
+            };
+
+            const p3 = {
+                x: K.x + Math.cos(a2) * upper.rx,
+                y: upper.y,
+                z: K.z + Math.sin(a2) * upper.rz
+            };
+
+            const p4 = {
+                x: K.x + Math.cos(a1) * upper.rx,
+                y: upper.y,
+                z: K.z + Math.sin(a1) * upper.rz
+            };
+
+            // 빛을 받는 방향에 따라 노란색을 조금씩 구분
+            const shade =
+                Math.sin((a1 + a2) / 2) < -0.3
+                    ? YELLOW_LIGHT
+                    : Math.sin((a1 + a2) / 2) > 0.5
+                        ? YELLOW_DARK
+                        : YELLOW;
+
+            drawQuad(
+                [p1, p2, p3, p4],
+                shade
+            );
+        }
+    }
+
+    // -----------------------------------------
+    // 3. 노란색 팔 2개
+    // -----------------------------------------
+
+    // 왼팔
+    drawLine(
+        {
+            x: K.x - 0.19,
+            y: 0.79,
+            z: K.z
+        },
+        {
+            x: K.x - 0.30,
+            y: 0.61,
+            z: K.z - 0.01
+        },
+        YELLOW,
+        13
+    );
+
+    drawLine(
+        {
+            x: K.x - 0.30,
+            y: 0.61,
+            z: K.z - 0.01
+        },
+        {
+            x: K.x - 0.28,
+            y: 0.39,
+            z: K.z - 0.04
+        },
+        YELLOW,
+        11
+    );
+
+    // 오른팔
+    drawLine(
+        {
+            x: K.x + 0.19,
+            y: 0.79,
+            z: K.z
+        },
+        {
+            x: K.x + 0.30,
+            y: 0.61,
+            z: K.z - 0.01
+        },
+        YELLOW,
+        13
+    );
+
+    drawLine(
+        {
+            x: K.x + 0.30,
+            y: 0.61,
+            z: K.z - 0.01
+        },
+        {
+            x: K.x + 0.28,
+            y: 0.39,
+            z: K.z - 0.04
+        },
+        YELLOW,
+        11
+    );
+
+    // -----------------------------------------
+    // 4. 짧은 다리 2개
+    // -----------------------------------------
+
+    // 왼쪽 다리
+    drawLine(
+        {
+            x: K.x - 0.10,
+            y: 0.24,
+            z: K.z
+        },
+        {
+            x: K.x - 0.10,
+            y: 0.07,
+            z: K.z
+        },
+        YELLOW_DARK,
+        12
+    );
+
+    // 오른쪽 다리
+    drawLine(
+        {
+            x: K.x + 0.10,
+            y: 0.24,
+            z: K.z
+        },
+        {
+            x: K.x + 0.10,
+            y: 0.07,
+            z: K.z
+        },
+        YELLOW_DARK,
+        12
+    );
+}
+
+
+    // =====================================================
+    // 체육관 바닥 나무 무늬
+    // =====================================================
+
+    function drawFloor() {
 
 
     // =====================================================
