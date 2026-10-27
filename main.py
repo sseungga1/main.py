@@ -1910,72 +1910,96 @@ function drawKevin() {
     const YELLOW_DARK = "#dcae20";
 
     // -----------------------------------------
-    // 2. 몸통과 둥근 머리
-    // 높이: 약 1m
+    // 2. 매끈한 캡슐형 노란색 몸통
+    // 전체 높이: 1.2m
     // -----------------------------------------
 
-    const bodyLevels = [
-        { y: 0.22, rx: 0.15, rz: 0.14 },
-        { y: 0.30, rx: 0.21, rz: 0.17 },
-        { y: 0.48, rx: 0.23, rz: 0.18 },
-        { y: 0.70, rx: 0.24, rz: 0.19 },
-        { y: 0.91, rx: 0.23, rz: 0.18 },
-        { y: 1.07, rx: 0.20, rz: 0.16 },
-        { y: 1.15, rx: 0.14, rz: 0.12 },
-        { y: 1.20, rx: 0.06, rz: 0.06 }
-    ];
+    const BODY_COLOR = "#f6cc35";
 
-    const segments = 12;
+    const BODY_RADIUS = 0.23;
+    const BODY_BOTTOM = 0.23;
+    const BODY_TOP = 1.20;
 
-    for (let level = 0; level < bodyLevels.length - 1; level++) {
+    const CAP_RADIUS = BODY_RADIUS;
+    const CYLINDER_BOTTOM = BODY_BOTTOM + CAP_RADIUS;
+    const CYLINDER_TOP = BODY_TOP - CAP_RADIUS;
 
-        const lower = bodyLevels[level];
-        const upper = bodyLevels[level + 1];
+    const RING_COUNT = 24;
+    const SIDE_COUNT = 32;
 
-        for (let i = 0; i < segments; i++) {
+    const bodyRings = [];
 
-            const a1 = (i / segments) * Math.PI * 2;
-            const a2 = ((i + 1) / segments) * Math.PI * 2;
+    // 아래쪽 반구
+    for (let i = 0; i <= RING_COUNT / 2; i++) {
+
+        const angle = -Math.PI / 2 + (i / (RING_COUNT / 2)) * (Math.PI / 2);
+
+        bodyRings.push({
+            y: CYLINDER_BOTTOM + CAP_RADIUS * Math.sin(angle),
+            radius: CAP_RADIUS * Math.cos(angle)
+        });
+    }
+
+    // 원기둥 몸통
+    bodyRings.push({
+        y: CYLINDER_TOP,
+        radius: BODY_RADIUS
+    });
+
+    // 위쪽 반구
+    for (let i = 1; i <= RING_COUNT / 2; i++) {
+
+        const angle = (i / (RING_COUNT / 2)) * (Math.PI / 2);
+
+        bodyRings.push({
+            y: CYLINDER_TOP + CAP_RADIUS * Math.sin(angle),
+            radius: CAP_RADIUS * Math.cos(angle)
+        });
+    }
+
+    // 곡면을 촘촘한 사각형으로 표현
+    for (let ring = 0; ring < bodyRings.length - 1; ring++) {
+
+        const lower = bodyRings[ring];
+        const upper = bodyRings[ring + 1];
+
+        for (let i = 0; i < SIDE_COUNT; i++) {
+
+            const a1 = (i / SIDE_COUNT) * Math.PI * 2;
+            const a2 = ((i + 1) / SIDE_COUNT) * Math.PI * 2;
 
             const p1 = {
-                x: K.x + Math.cos(a1) * lower.rx,
+                x: K.x + Math.cos(a1) * lower.radius,
                 y: lower.y,
-                z: K.z + Math.sin(a1) * lower.rz
+                z: K.z + Math.sin(a1) * lower.radius
             };
 
             const p2 = {
-                x: K.x + Math.cos(a2) * lower.rx,
+                x: K.x + Math.cos(a2) * lower.radius,
                 y: lower.y,
-                z: K.z + Math.sin(a2) * lower.rz
+                z: K.z + Math.sin(a2) * lower.radius
             };
 
             const p3 = {
-                x: K.x + Math.cos(a2) * upper.rx,
+                x: K.x + Math.cos(a2) * upper.radius,
                 y: upper.y,
-                z: K.z + Math.sin(a2) * upper.rz
+                z: K.z + Math.sin(a2) * upper.radius
             };
 
             const p4 = {
-                x: K.x + Math.cos(a1) * upper.rx,
+                x: K.x + Math.cos(a1) * upper.radius,
                 y: upper.y,
-                z: K.z + Math.sin(a1) * upper.rz
+                z: K.z + Math.sin(a1) * upper.radius
             };
-
-            // 빛을 받는 방향에 따라 노란색을 조금씩 구분
-            const shade =
-                Math.sin((a1 + a2) / 2) < -0.3
-                    ? YELLOW_LIGHT
-                    : Math.sin((a1 + a2) / 2) > 0.5
-                        ? YELLOW_DARK
-                        : YELLOW;
 
             drawQuad(
                 [p1, p2, p3, p4],
-                shade
+                BODY_COLOR
             );
         }
     }
 
+    
     // -----------------------------------------
     // 3. 노란색 팔 2개
     // -----------------------------------------
