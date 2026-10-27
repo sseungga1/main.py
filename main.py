@@ -656,7 +656,18 @@ const MOVE_SPEED = 0.08;
 
 function updateMovement() {
 
+    // -----------------------------------------
+    // 이동하기 전 위치 저장
+    // -----------------------------------------
+
+    const previousX = camera.x;
+    const previousZ = camera.z;
+
+
+    // -----------------------------------------
     // 현재 바라보는 방향
+    // -----------------------------------------
+
     const forwardX =
         -Math.sin(camera.yaw);
 
@@ -664,7 +675,10 @@ function updateMovement() {
         Math.cos(camera.yaw);
 
 
+    // -----------------------------------------
     // 현재 바라보는 방향의 오른쪽
+    // -----------------------------------------
+
     const rightX =
         Math.cos(camera.yaw);
 
@@ -727,7 +741,6 @@ function updateMovement() {
     // D : 오른쪽
     // -----------------------------------------
 
-   
     if (keys.d) {
 
         camera.x +=
@@ -740,7 +753,32 @@ function updateMovement() {
 
     }
 
+
+    // -----------------------------------------
+    // 네트 충돌 판정
+    // 네트 반대편으로 넘어가지 못하게 제한
+    // -----------------------------------------
+
+    const NET_MARGIN = 0.25;
+
+    const crossedNet =
+        (previousZ < NET_Z && camera.z >= NET_Z) ||
+        (previousZ > NET_Z && camera.z <= NET_Z);
+
+    const withinNetWidth =
+        Math.abs(camera.x) <= COURT_WIDTH / 2 + NET_MARGIN;
+
+    if (crossedNet && withinNetWidth) {
+
+        camera.z = previousZ;
+
+    }
+
+
+    // -----------------------------------------
     // 체육관 벽 밖으로 나가지 못하게 제한
+    // -----------------------------------------
+
     const WALL_MARGIN = 0.3;
 
     camera.x = Math.max(
@@ -760,7 +798,6 @@ function updateMovement() {
     );
 
 }
-
 
 
 // =====================================================
