@@ -1661,107 +1661,195 @@ function drawRearWall() {
 // 대칭형 천장 철골 구조물 3개
 // =====================================================
 
+// =====================================================
+// 천장 철골 트러스 3개 + 길이 방향 연결 철골
+// =====================================================
+
 function drawSteelTrusses() {
+
+    // -----------------------------------------
+    // 1. 지붕 높이 설정
+    // -----------------------------------------
 
     const ROOF_PEAK_Y = WALL_HEIGHT + 2.4;
 
-    // 세 구조물의 위치: 앞쪽 / 중앙 / 뒤쪽
+    // -----------------------------------------
+    // 2. 폭 방향 트러스의 위치
+    // 앞쪽 / 중앙 / 뒤쪽 대칭 배치
+    // -----------------------------------------
+
     const trussPositions = [
         GYM_LENGTH * 0.25,
         GYM_LENGTH * 0.50,
         GYM_LENGTH * 0.75
     ];
 
-    // 철골 색상과 굵기
-    const STEEL_COLOR = "#69747b";
+    // -----------------------------------------
+    // 3. 철골 색상과 굵기
+    // -----------------------------------------
+
+    const STEEL_COLOR = "#59636b";
     const STEEL_HIGHLIGHT = "#aab3b8";
-    const STEEL_WIDTH = 5;
-    const HIGHLIGHT_WIDTH = 1.5;
+
+    const MAIN_WIDTH = 5;
+    const BRACE_WIDTH = 3;
+    const HIGHLIGHT_WIDTH = 1;
+
+    // -----------------------------------------
+    // 4. 폭 방향 삼각형 트러스 3개
+    // -----------------------------------------
 
     for (const z of trussPositions) {
 
-        // -----------------------------------------
-        // 삼각형의 기준점
-        // -----------------------------------------
-
+        // 지붕 왼쪽 끝
         const left = {
             x: -GYM_WIDTH / 2,
             y: WALL_HEIGHT,
             z: z
         };
 
+        // 지붕 꼭대기
         const peak = {
             x: 0,
             y: ROOF_PEAK_Y,
             z: z
         };
 
+        // 지붕 오른쪽 끝
         const right = {
             x: GYM_WIDTH / 2,
             y: WALL_HEIGHT,
             z: z
         };
 
-        // 아래쪽 수평 연결 보
-        const bottom = {
-            x: 0,
-            y: WALL_HEIGHT,
-            z: z
-        };
-
-        // 내부 보강재가 만나는 지점
-        const leftInner = {
+        // 왼쪽 내부 보강 지점
+        const leftTop = {
             x: -GYM_WIDTH / 4,
             y: WALL_HEIGHT + 1.2,
             z: z
         };
 
-        const rightInner = {
+        // 오른쪽 내부 보강 지점
+        const rightTop = {
             x: GYM_WIDTH / 4,
             y: WALL_HEIGHT + 1.2,
             z: z
         };
 
+        // 아래쪽 중앙 연결 지점
+        const bottomCenter = {
+            x: 0,
+            y: WALL_HEIGHT,
+            z: z
+        };
+
+        // 아래쪽 왼쪽 연결 지점
+        const leftBottom = {
+            x: -GYM_WIDTH / 4,
+            y: WALL_HEIGHT,
+            z: z
+        };
+
+        // 아래쪽 오른쪽 연결 지점
+        const rightBottom = {
+            x: GYM_WIDTH / 4,
+            y: WALL_HEIGHT,
+            z: z
+        };
+
         // -----------------------------------------
-        // ① 삼각형 외곽 철골
+        // ① 삼각형 외곽 주 철골
         // -----------------------------------------
 
-        drawLine(left, peak, STEEL_COLOR, STEEL_WIDTH);
-        drawLine(peak, right, STEEL_COLOR, STEEL_WIDTH);
-        drawLine(left, right, STEEL_COLOR, STEEL_WIDTH);
+        drawLine(left, peak, STEEL_COLOR, MAIN_WIDTH);
+        drawLine(peak, right, STEEL_COLOR, MAIN_WIDTH);
+        drawLine(left, right, STEEL_COLOR, MAIN_WIDTH);
 
         // -----------------------------------------
-        // ② 내부 대칭 보강재
+        // ② 내부 수직 보강재
         // -----------------------------------------
 
-        drawLine(left, leftInner, STEEL_COLOR, STEEL_WIDTH);
-        drawLine(leftInner, peak, STEEL_COLOR, STEEL_WIDTH);
-
-        drawLine(peak, rightInner, STEEL_COLOR, STEEL_WIDTH);
-        drawLine(rightInner, right, STEEL_COLOR, STEEL_WIDTH);
-
-        drawLine(leftInner, bottom, STEEL_COLOR, STEEL_WIDTH);
-        drawLine(bottom, rightInner, STEEL_COLOR, STEEL_WIDTH);
+        drawLine(leftTop, leftBottom, STEEL_COLOR, BRACE_WIDTH);
+        drawLine(rightTop, rightBottom, STEEL_COLOR, BRACE_WIDTH);
 
         // -----------------------------------------
-        // ③ 철골에 밝은 면을 더해 입체감 표현
+        // ③ 내부 대각선 보강재
+        // -----------------------------------------
+
+        drawLine(leftTop, bottomCenter, STEEL_COLOR, BRACE_WIDTH);
+        drawLine(bottomCenter, rightTop, STEEL_COLOR, BRACE_WIDTH);
+
+        // 꼭대기에서 아래쪽 연결점으로 이어지는 보강재
+        drawLine(peak, leftBottom, STEEL_COLOR, BRACE_WIDTH);
+        drawLine(peak, rightBottom, STEEL_COLOR, BRACE_WIDTH);
+
+        // -----------------------------------------
+        // ④ 금속의 밝은 면 표현
         // -----------------------------------------
 
         drawLine(left, peak, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
         drawLine(peak, right, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
         drawLine(left, right, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
 
-        drawLine(left, leftInner, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
-        drawLine(leftInner, peak, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+        drawLine(leftTop, leftBottom, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+        drawLine(rightTop, rightBottom, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
 
-        drawLine(peak, rightInner, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
-        drawLine(rightInner, right, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+        drawLine(leftTop, bottomCenter, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+        drawLine(bottomCenter, rightTop, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
 
-        drawLine(leftInner, bottom, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
-        drawLine(bottom, rightInner, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+        drawLine(peak, leftBottom, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+        drawLine(peak, rightBottom, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+    }
+
+    // -----------------------------------------
+    // 5. 길이 방향 철골 연결
+    // 지붕 양쪽 경사와 꼭대기를 따라 연결
+    // -----------------------------------------
+
+    const longitudinalXPositions = [
+        -GYM_WIDTH / 2,
+        -GYM_WIDTH / 4,
+        0,
+        GYM_WIDTH / 4,
+        GYM_WIDTH / 2
+    ];
+
+    // 체육관 앞쪽부터 뒤쪽까지 연결
+    const longitudinalZPositions = [
+        0,
+        ...trussPositions,
+        GYM_LENGTH
+    ];
+
+    for (const x of longitudinalXPositions) {
+
+        // 각 지붕 위치에서의 높이 계산
+        const roofY =
+            WALL_HEIGHT +
+            2.4 * (1 - Math.abs(x) / (GYM_WIDTH / 2));
+
+        for (let i = 0; i < longitudinalZPositions.length - 1; i++) {
+
+            const start = {
+                x: x,
+                y: roofY,
+                z: longitudinalZPositions[i]
+            };
+
+            const end = {
+                x: x,
+                y: roofY,
+                z: longitudinalZPositions[i + 1]
+            };
+
+            // 길이 방향 주 철골
+            drawLine(start, end, STEEL_COLOR, MAIN_WIDTH);
+
+            // 금속의 밝은 면
+            drawLine(start, end, STEEL_HIGHLIGHT, HIGHLIGHT_WIDTH);
+        }
     }
 }
-
 
 // =====================================================
 // 체육관 바닥 나무 무늬
